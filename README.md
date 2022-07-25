@@ -2,7 +2,7 @@
 
 This is code used in all Støjmaskiner plugins, free or not, open source or not. This code remains free and open source and is a peer into how some of our plugins work.
 
-## Submodule: `distortion.h`
+## Submodule: `distortion.hpp`
 
 Simple non-linear functions and more complex distortion constructs. Fast variants are available as well for computation on embedded devices.
 
@@ -41,3 +41,12 @@ Full list:
 - `fast_soft_clip`: algebraic soft clipper
 - `fast_medium_clip`: algebraic medium clipper
 - `fast_firm_clip`: algebraic firm clipper
+
+
+## Submodule: `math_extensions.hpp`
+Extensions to the (lacking) `cmath` standard library
+
+### More trig and hyperbolic functions
+
+### `signum`
+Signum returns 1 if the sign of the input is positive, -1 if it is negative and 0 if it is 0. It is faster than any alternative from the standard library.
