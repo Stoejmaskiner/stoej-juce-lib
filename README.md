@@ -6,6 +6,14 @@ This is code used in all Støjmaskiner plugins, free or not, open source or not.
 
 Simple non-linear functions and more complex distortion constructs. Fast variants are available as well for computation on embedded devices.
 
+### Distortion primitives
+These are the bare-bones functions used in the distortion effects, they are not parametrized (i.e. it's just a simple mapping from the input signal to the output signal, with no scaling or biasing). Usually you'd want to use other effects unless you need to implement custom scaling or biasing.
+- `soft_sigmoid`: a wrapper around `tanh`, for API consistency
+- `medium_sigmoid`: used in `medium_clip`
+- `firm_sigmoid`: used in `firm_clip`
+- `unity_clamp`: used in `hard_clip` and `safe_clip`
+- `signed_ln`: used in `unbounded_dist`
+
 ### `unbounded_dist` and `fast_unbounded_dist`
 Soft distortion with no maximal saturation threshold. It is based on the natural log.
 
