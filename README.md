@@ -13,6 +13,7 @@ These are the bare-bones functions used in the distortion effects, they are not 
 - `firm_sigmoid`: used in `firm_clip`
 - `unity_clamp`: used in `hard_clip` and `safe_clip`
 - `signed_ln`: used in `unbounded_dist`
+- `fast_soft_sigmoid`, `fast_medium_sigmoid`, `fast_firm_sigmoid`
 
 ### `unbounded_dist` and `fast_unbounded_dist`
 Soft distortion with no maximal saturation threshold. It is based on the natural log.
