@@ -29,3 +29,6 @@ Full list:
 - `hard_clip`: digital hard clipping
 - `safe_clip`: digital hard clipping with inter-sample peak clipping
 - `sin_clip`: soft clipping based on `sin`, has the property of reaching maximal saturation with finite gain
+- `fast_soft_clip`: algebraic soft clipper
+- `fast_medium_clip`: algebraic medium clipper
+- `fast_firm_clip`: algebraic firm clipper
