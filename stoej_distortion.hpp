@@ -1,5 +1,5 @@
 #include <cmath>
-#include <math_extensions>
+#include <stoej_math.hpp>
 
 namespace stoej {
     float soft_sigmoid(float x)   { return std::tanhf(x); }
