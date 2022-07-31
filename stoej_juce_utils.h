@@ -15,13 +15,21 @@ namespace stoej {
 
     /// alias for juce::AudioParameterFloat smart pointer to be used
     /// in APVTS parameter layout to reduce boilerplate
-    inline auto UniqueParamFloat(auto... args) { 
+    auto UniqueParamFloat(auto... args) { 
         return std::make_unique<juce::AudioParameterFloat>(args...); 
     }
 
     /// alias for juce::AudioParameterBool smart pointer to be used
     /// in APVTS parameter layout to reduce boilerplate
-    inline auto UniqueParamBool(auto... args) {
+    auto UniqueParamBool(auto... args) {
         return std::make_unique<juce::AudioParameterBool>(args...);
+    }
+
+    /// convert juce::AudioBuffer to juce::ProcessContextReplacing
+    /// to reduce boilerplate
+    inline juce::dsp::ProcessContextReplacing<float> buff_to_context (juce::AudioBuffer<float> &buff)
+    {
+        auto block = juce::dsp::AudioBlock<float>(buff);
+        return{ block };
     }
 }

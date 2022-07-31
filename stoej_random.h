@@ -30,15 +30,22 @@ namespace stoej {
             this->initial_seed_ = seed;
         }
 
+        void prepare(const juce::dsp::ProcessSpec&) override {};
+
         void process(const juce::dsp::ProcessContextReplacing<float>& context) override
         {
             // ===== getting stuff =====
-            const auto sink_ptr = context.getOutputBlock().getChannelPointer(0);
-            const auto size = context.getInputBlock().getNumSamples();
+            const auto block = context.getOutputBlock();
+            const auto num_chans = block.getNumChannels();
+            const auto size = context.getOutputBlock().getNumSamples();
 
-            for (juce::uint32 i = 0; i < size; i++)
+            for (juce::uint32 c = 0; c < num_chans; c++)
             {
-                sink_ptr[i] = this->random_.nextFloat() * 2.0f - 1.0f;
+                const auto sink_ptr = block.getChannelPointer(c);
+                for (juce::uint32 i = 0; i < size; i++)
+                {
+                    sink_ptr[i] = this->random_.nextFloat() * 2.0f - 1.0f;
+                }
             }
         }
 
