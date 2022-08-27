@@ -27,6 +27,7 @@ namespace stoej {
 
     /// convert juce::AudioBuffer to juce::ProcessContextReplacing
     /// to reduce boilerplate
+    [[deprecate("buggy, use snippet instead")]]
     inline juce::dsp::ProcessContextReplacing<float> buff_to_context (juce::AudioBuffer<float> &buff)
     {
         auto block = juce::dsp::AudioBlock<float>(buff);

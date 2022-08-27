@@ -11,7 +11,7 @@
   ==============================================================================
 */
 
-#include "TemplateProcessor.h"
+#include "template_processor.h"
 
 template <typename ST>
 TemplateProcessor<ST>::TemplateProcessor() {

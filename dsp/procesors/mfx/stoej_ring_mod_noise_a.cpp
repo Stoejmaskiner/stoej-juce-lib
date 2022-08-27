@@ -1,12 +1,11 @@
 /*
   ==============================================================================
 
-    stoej_base.h
-    Created: 31 Jul 2022 5:19:38pm
+    stoej_ring_mod_noise_a.cpp
+    Created: 21 Aug 2022 2:56:49pm
     Author:  Lorenzo
 
   ==============================================================================
 */
 
-#pragma once
-
+#include "stoej_ring_mod_noise_a.h"

@@ -34,7 +34,7 @@ public:
         auto numChans = inBlock.getNumChannels();
 
         if (context.isBypassed) {
-            gain.skip(static_cast<int> (len));
+            this->_exampleParam.skip(static_cast<int> (len));
 
             if (context.usesSeparateInputAndOutputBlocks())
                 outBlock.copyFrom(inBlock);
@@ -75,6 +75,19 @@ public:
             juce::FloatVectorOperations::multiply(dst, src, gains, static_cast<int>(len));
         }
         */
+
+        // example code 3: defer to processSample (no opt)
+        /*
+        
+        for (size_t c = 0; c < numChans; c++) {
+            auto* src = inBlock.getChannelPointer (c);
+            auto* dst = outBlock.getChannelPointer (c);
+            for (size_t i = 0; i < len; i++) {
+                dst[i] = this->processSample(c, src[i]);
+            }
+        }
+        */
+
     }
 
     /// processes a single sample instead of a buffer
