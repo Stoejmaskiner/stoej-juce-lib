@@ -1,0 +1,97 @@
+/*
+  ==============================================================================
+
+    white_noise.h
+    Created: 21 Aug 2022 2:45:52pm
+    Author:  Lorenzo
+
+  ==============================================================================
+*/
+
+#pragma once
+#include <JuceHeader.h>
+#include <utils/stoej_xfade.h>
+
+
+namespace stoej {
+    template <typename ST>
+    class WhiteNoise {
+    public:
+
+        /// initialize with random seed
+        WhiteNoise();
+
+        /// initialize with given seed
+        WhiteNoise(const juce::int64 seed);
+
+        void prepare(juce::dsp::ProcessSpec& spec);
+
+        void reset();
+
+        // must be in header to maximize chance of good optimization
+        template <typename ProcessContext>
+        void process(const ProcessContext& context) noexcept {
+
+            auto&& inBlock = context.getInputBlock();
+            auto&& outBlock = context.getOutputBlock();
+
+            jassert(inBlock.getNumChannels() == outBlock.getNumChannels());
+            jassert(inBlock.getNumSamples() == outBlock.getNumSamples());
+
+            auto len = inBlock.getNumSamples();
+            auto numChans = inBlock.getNumChannels();
+
+            if (context.isBypassed) {
+
+                if (context.usesSeparateInputAndOutputBlocks())
+                    outBlock.copyFrom(inBlock);
+
+                return;
+            }
+
+            // fill mono noise buffer
+            // TODO: OPT: consider moving out ot process and realloc only on resize
+            auto* mono_noise_buff = static_cast<ST*>( alloca( sizeof(ST) * len ));
+            for (size_t i = 0; i < len; i++) {
+                mono_noise_buff[i] = this->processSample();
+            }
+
+            // fill destination with stereo noise
+            for (size_t c = 0; c < numChans; c++) {
+                auto* dst = outBlock.getChannelPointer(c);
+                for (size_t i = 0; i < len; i++) {
+                    // TODO: crossfade with +6 dB compensation
+                    dst[i] = this->processSample();
+                }
+            }
+
+            // mono-stereo crossfade
+            auto xfade_coeffs = stoej::fast_xfade_coeffs<ST, -3>(ST(1.) - this->noise_width_);
+            for (size_t c = 0; c < numChans; c++) {
+	            auto* dst = outBlock.getChannelPointer(c);
+                stoej::xfade(dst, mono_noise_buff, xfade_coeffs, len);
+            }
+
+        }
+
+        /// processes a single sample instead of a buffer, note that
+        /// the width parameter does nothing when processing single samples
+        /// as it requires multi-channel awareness
+        ST processSample() {
+            if constexpr (std::is_same_v<ST, float>) {
+                return this->random_.nextFloat() * 2.0f - 1.0f;
+            }
+            return this->random_.nextDouble() * 2.0 - 1.0;
+        }
+
+        // ========================================================================
+        void setNoiseWidth(ST val) { this->noise_width_ = val; }
+        ST getNoiseWidth() { return this->noise_width_; }
+
+    private:
+        ST noise_width_ = ST(.5);
+        size_t max_size_;
+        juce::int64 initial_seed_;
+        juce::Random random_;
+    };
+}
