@@ -10,7 +10,7 @@
 
 #pragma once
 #include <stoej_core.h>
-#include <stoej_math.h>
+#include "utils/stoej_math.h"
 #include <utility>
 #include <JuceHeader.h>
 #include <gcem.hpp>
@@ -69,9 +69,44 @@ namespace stoej {
         };
     }
 
+    /// <summary>
+    /// branchless approximation of a "transition fade" crossfader (DJ-style
+    /// crossfade)
+    /// </summary>
+    STOEJ_FT_
+    Coeffs<FT_> xfade_fast_transition(FT_ t) {
+	    const FT_ one_min_t = FT_(1.) - t;
+        const FT_ t_2 = t * t;
+        const FT_ t_4 = t_2 * t_2;
+        const FT_ t_8 = t_4 * t_4;
+        const FT_ t_9 = t_8 * t;
+        const FT_ t_10 = t_9 * t;
+        const FT_ t_11 = t_10 * t;
+        const FT_ one_min_t_2 = one_min_t * one_min_t;
+        const FT_ one_min_t_4 = one_min_t_2 * one_min_t_2;
+        const FT_ one_min_t_8 = one_min_t_4 * one_min_t_4;
+        const FT_ one_min_t_9 = one_min_t_8 * one_min_t;
+        const FT_ one_min_t_10 = one_min_t_9 * one_min_t;
+        const FT_ one_min_t_11 = one_min_t_10 * one_min_t;
+        constexpr FT_ a = FT_(-131.395);
+        constexpr FT_ b = FT_(368.122);
+        constexpr FT_ c = FT_(-351.413);
+        constexpr FT_ d = FT_(113.688);
+        return Coeffs<FT_> {
+			.a = FT_(1.) + a * t_8 + b * t_9 + c * t_10 + d * t_11,
+            .b = FT_(1.) + a * one_min_t_8 + b * one_min_t_9 + c * one_min_t_10 + d * one_min_t_11,
+        };
+    }
+
     STOEJ_FT_
     void xfade (FT_* dst, const FT_* src, Coeffs<FT_> coeffs, int len) {
 	    juce::FloatVectorOperationsBase<FT_,int>::multiply(dst, coeffs.a, len);
         juce::FloatVectorOperationsBase<FT_,int>::addWithMultiply(dst, src, coeffs.b, len);
+    }
+
+    STOEJ_FT_
+    void xfade (FT_* dst, const FT_* src1, const FT_* src2, Coeffs<FT_> coeffs, int len) {
+	    juce::FloatVectorOperationsBase<FT_,int>::multiply(dst, src1, coeffs.a, len);
+        juce::FloatVectorOperationsBase<FT_,int>::addWithMultiply(dst, src2, coeffs.b, len);
     }
 }

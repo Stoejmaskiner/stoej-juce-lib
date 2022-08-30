@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    TemplateProcessor.cpp
+    MultiplicativeNoise.cpp
     Created: 18 Aug 2022 11:44:36pm
     Author:  Lorenzo
 
@@ -14,21 +14,21 @@
 #include "template_processor.h"
 
 template <typename ST>
-TemplateProcessor<ST>::TemplateProcessor() {
+MultiplicativeNoise<ST>::MultiplicativeNoise() {
     
     // ... your code here ...
 
 }
 
 template <typename ST>
-void TemplateProcessor<ST>::prepare(juce::dsp::ProcessSpec& spec) {
+void MultiplicativeNoise<ST>::prepare(juce::dsp::ProcessSpec& spec) {
 
     _sampleRate = spec.sampleRate;
     this->reset();
 }
 
 template <typename ST>
-void TemplateProcessor<ST>::reset() {
+void MultiplicativeNoise<ST>::reset() {
 
     if (_sampleRate <= 0.f) return;
 
@@ -39,7 +39,7 @@ void TemplateProcessor<ST>::reset() {
 }
 
 template<typename ST>
-ST TemplateProcessor<ST>::processSample(int channel, ST inputValue)
+ST MultiplicativeNoise<ST>::processSample(int channel, ST inputValue)
 {
     // ... your code here ...
 
@@ -51,18 +51,18 @@ ST TemplateProcessor<ST>::processSample(int channel, ST inputValue)
 
 // ========================================================================
 template<typename ST>
-void TemplateProcessor<ST>::setExampleParam(ST val)
+void MultiplicativeNoise<ST>::setExampleParam(ST val)
 {
     _exampleParam.setTargetValue(val);
 }
 
 template<typename ST>
-ST TemplateProcessor<ST>::getExampleParam()
+ST MultiplicativeNoise<ST>::getExampleParam()
 {
     return _exampleParam.getTargetValue();
 }
 
 
 // these are the two allowed types
-template class TemplateProcessor<float>;
-template class TemplateProcessor<double>;
+template class MultiplicativeNoise<float>;
+template class MultiplicativeNoise<double>;
