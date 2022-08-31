@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    TemplateProcessor.h
+    MultiplicativeNoise.h
     Created: 18 Aug 2022 11:44:36pm
     Author:  Lorenzo
 
@@ -12,9 +12,9 @@
 #include <JuceHeader.h>
 
 template <typename ST>
-class TemplateProcessor {
+class MultiplicativeNoise {
 public:
-    TemplateProcessor();
+    MultiplicativeNoise();
 
     void prepare(juce::dsp::ProcessSpec& spec);
 
