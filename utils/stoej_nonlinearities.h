@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <utils/stoej_math.h>
+#include <utils/stoej_compile_time_utils.h>
 
 namespace stoej {
 	inline float soft_sigmoid(float x)   { return std::tanhf(x); }
@@ -17,6 +18,15 @@ namespace stoej {
 
 	inline float asymmetric_pow(float x, float a) { return std::pow(std::abs(x), a); }
 	inline double asymmetric_pow(double x, double a) { return std::pow(std::abs(x), a); }
+
+
+	/// hard clips at +3dB 
+	STOEJ_FT_
+	FT_ safety_clip_3db(FT_ x)
+	{
+		constexpr FT_ limit = static_cast<FT_>(stoej::const_db2a<3.0>());
+		return stoej::clamp_abs(x, limit);
+	}
 
     // TODO: fast approximations
 }

@@ -16,6 +16,7 @@ stoej::MultiplicativeNoise<ST>::MultiplicativeNoise() {
 
     this->filter_lp_.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
     this->filter_hp_.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+    this->noise_generator_.setEnableHQWidth(true);
     this->noise_buffer_ = juce::AudioBuffer<ST>(16,0);
 
 }

@@ -56,11 +56,23 @@ namespace stoej {
                 mono_noise_buff[i] = this->processSample();
             }
 
+            // fill selection buffer
+            bool* selection_buff = nullptr;
+            if(this->enable_hq_width_)
+            {
+                selection_buff = static_cast<bool*>(alloca(sizeof(bool) * len));
+                for(size_t i = 0; i < len; i++)
+                {
+                    selection_buff[i] = this->random_.nextFloat() < this->noise_width_;
+                }
+            }
+            
+            
+
             // fill destination with stereo noise
             for (size_t c = 0; c < numChans; c++) {
                 auto* dst = outBlock.getChannelPointer(c);
                 for (size_t i = 0; i < len; i++) {
-                    // TODO: crossfade with +6 dB compensation
                     dst[i] = this->processSample();
                 }
             }
@@ -69,7 +81,18 @@ namespace stoej {
             auto xfade_coeffs = stoej::fast_xfade_coeffs<ST, -3>(ST(1.) - this->noise_width_);
             for (size_t c = 0; c < numChans; c++) {
 	            auto* dst = outBlock.getChannelPointer(c);
-                stoej::xfade(dst, mono_noise_buff, xfade_coeffs, len);
+                if (this->enable_hq_width_)
+                {
+                    // expensive width computation
+	                for (size_t i = 0; i < len; i++)
+	                {
+                        dst[i] = selection_buff[i] ? dst[i] : mono_noise_buff[i];
+	                }
+                } else
+                {
+                    // cheap width computation
+                    stoej::xfade(dst, mono_noise_buff, xfade_coeffs, len);
+                }
             }
 
         }
@@ -88,8 +111,37 @@ namespace stoej {
         void setNoiseWidth(ST val) { this->noise_width_ = val; }
         ST getNoiseWidth() { return this->noise_width_; }
 
+        /// Enables more expensive computation of noise width that guarantees uniform
+        /// distribution for all intermediate values of noise width.
+        ///
+        /// Normally, intermediate widths are obtained by power preserving crossfade
+        /// of a mono buffer and a stereo buffer. Perceptually, this sounds very
+        /// smooth, however the statistical distribution of the noise changes with
+        /// the value of width, which would affect any non-linear post processing
+        /// done to the noise.
+        ///
+        /// To counter this, enabling HQ width guarantees that the distribution
+        /// will remain uniform for all values of noise_width_, by adding an
+        /// additional bernoulli random variable that chooses whether each sample
+        /// is taken from the stereo buffer or the mono buffer.
+        ///
+        /// <b>Caveats</b>\n
+        /// While this method is good enough for sound processing it has some
+        /// strange undesired statistical side effects, so it should not be used as
+        /// for any precise statistical purposes.
+        ///
+        /// Specifically, the individual samples in one frame are always either fully
+        /// correlated or fully uncorrelated, but the probability of them being correlated
+        /// or not determines their long-term average correlation.
+        ///
+        /// Acoustically this has no or very subtle effect, but it might have subtle sub-liminal
+        /// or psychoacoustic effects.
+        void setEnableHQWidth(bool enable) { this->enable_hq_width_ = enable; }
+        ST getEnableHQWidth() { return this->enable_hq_width_; }
+
     private:
         ST noise_width_ = ST(.5);
+        bool enable_hq_width_ = false;
         size_t max_size_;
         juce::int64 initial_seed_;
         juce::Random random_;

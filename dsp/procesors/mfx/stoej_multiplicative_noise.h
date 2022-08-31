@@ -46,17 +46,34 @@ namespace stoej {
 	            return;
 	        }
 
+			// compute wet buffer
 			auto noise_block = juce::dsp::AudioBlock<ST>(this->noise_buffer_);
 			auto noise_context = juce::dsp::ProcessContextReplacing<ST>(noise_block);
 			this->noise_generator_.process(noise_context);
-
-			// compute wet buffer
 	        for (size_t c = 0; c < numChans; c++) {
 				auto* noise_buff = noise_block.getChannelPointer(c);
 				auto* src_in = inBlock.getChannelPointer(c);
 	            for (size_t i = 0; i < len; i++) {
-	                float noise_samp = stoej::symmetric_pow(noise_buff[i], ST(1.0) / (ST(0.00002) + this->noise_density_));
-					noise_buff[i] = noise_samp * src_in[i];
+	                // computes density transformation on noise as well as gain compensation
+					// for very low density having a very low RMS level.
+					// gain compensation is non-linear because
+					// RMS drops suddenly only for very low density.
+					float t = ST(1.0) - this->noise_density_;
+					float t_1 = t   * t;
+					float t_2 = t_1 * t_1;
+					float t_3 = t_2 * t_2; //t^8
+					float x = noise_buff[i];
+					float gain_compensate = ST(this->DENSITY_GAIN_COMP_) * t_3 + ST(1.0) * (ST(1.0) - t_3);
+					float noise_samp = x < t ? (-t < x ? ST(0.0) : x ) : x;
+					float in_samp = src_in[i];
+
+					// grit adds additional non-linearity
+					if (this->grit_enable_)
+					{
+						in_samp = -stoej::clamp_min(in_samp, ST(0.0));
+					}
+					// low density noise gets very spiky, so safety clipping to avoid extreme values
+					noise_buff[i] = stoej::safety_clip_3db(noise_samp * gain_compensate * in_samp);
 	            }
 	        }
 
@@ -137,9 +154,14 @@ namespace stoej {
 		ST getOutLevel()				{ return this->out_level_; }
 
 	private:
+		// ===============================================================
+		// adjust these to calibrate
+		static constexpr ST DENSITY_GAIN_COMP_ = ST(3.0);	// gain compensation for low density noise
+
+		// ===============================================================
 		juce::SmoothedValue<ST> filter_lp_cutoff_;
 		juce::SmoothedValue<ST> filter_hp_cutoff_;
-		bool grit_enable_;
+		bool grit_enable_ = true;
 		ST noise_density_ = ST(1.0);
 		ST noise_mix_ = ST(0.5);
 		ST out_level_ = ST(1.0);
