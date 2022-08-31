@@ -14,6 +14,8 @@
 template <typename ST>
 stoej::MultiplicativeNoise<ST>::MultiplicativeNoise() {
 
+    this->filter_lp_.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    this->filter_hp_.setType(juce::dsp::StateVariableTPTFilterType::highpass);
     this->noise_buffer_ = juce::AudioBuffer<ST>(16,0);
 
 }
@@ -21,37 +23,26 @@ stoej::MultiplicativeNoise<ST>::MultiplicativeNoise() {
 template <typename ST>
 void stoej::MultiplicativeNoise<ST>::prepare(juce::dsp::ProcessSpec& spec) {
 
-    _sampleRate = spec.sampleRate;
+    sample_rate_ = spec.sampleRate;
     this->noise_buffer_.setSize(spec.numChannels, spec.maximumBlockSize);
     this->noise_generator_.prepare(spec);
+    this->filter_lp_.prepare(spec);
+    this->filter_hp_.prepare(spec);
     this->reset();
 }
 
 template <typename ST>
 void stoej::MultiplicativeNoise<ST>::reset() {
 
-    if (_sampleRate <= 0.f) return;
+    if (sample_rate_ <= 0.f) return;
 
     // ... your code here ...
 
     this->noise_generator_.reset();
-
-    _exampleParam.reset(_sampleRate, 0.02);
-    _exampleParam.setTargetValue(ST(0.0f));
-}
-
-
-// ========================================================================
-template<typename ST>
-void stoej::MultiplicativeNoise<ST>::setExampleParam(ST val)
-{
-    _exampleParam.setTargetValue(val);
-}
-
-template<typename ST>
-ST stoej::MultiplicativeNoise<ST>::getExampleParam()
-{
-    return _exampleParam.getTargetValue();
+    this->filter_lp_.reset();
+    this->filter_hp_.reset();
+    this->filter_lp_cutoff_.reset(sample_rate_, 0.02);
+    this->filter_hp_cutoff_.reset(sample_rate_, 0.02);
 }
 
 

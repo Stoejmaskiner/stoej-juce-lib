@@ -21,9 +21,7 @@ namespace stoej {
 	class MultiplicativeNoise {
 	public:
 	    MultiplicativeNoise();
-
 	    void prepare(juce::dsp::ProcessSpec& spec);
-
 	    void reset();
 
 	    // must be in header to maximize chance of good optimization
@@ -41,7 +39,8 @@ namespace stoej {
 
 			// bypass processor
 	        if (context.isBypassed) {
-	            this->_exampleParam.skip(static_cast<int> (len));
+				this->filter_lp_cutoff_.skip(static_cast<int> (len));
+				this->filter_hp_cutoff_.skip(static_cast<int> (len));
 	            if (context.usesSeparateInputAndOutputBlocks())
 	                outBlock.copyFrom(inBlock);
 	            return;
@@ -61,6 +60,18 @@ namespace stoej {
 	            }
 	        }
 
+			for (size_t c = 0; c < numChans; c++) {
+				auto* noise_buff = noise_block.getChannelPointer(c);
+				for (size_t i = 0; i < len; i++) {
+					auto lp_cut = this->filter_lp_cutoff_.getNextValue();
+					auto hp_cut = this->filter_hp_cutoff_.getNextValue();
+					this->filter_lp_.setCutoffFrequency(lp_cut);
+					this->filter_hp_.setCutoffFrequency(hp_cut);
+					noise_buff[i] = this->filter_lp_.processSample(c, noise_buff[i]);
+					noise_buff[i] = this->filter_hp_.processSample(c, noise_buff[i]);
+				}
+			}
+
 			// crossfade
 			auto coeffs = stoej::xfade_fast_transition(this->noise_mix_);
 			// need to do 1 - mix because the xfade function has the destination as the first
@@ -70,6 +81,11 @@ namespace stoej {
 				auto* dry = inBlock.getChannelPointer(c);
 				auto* dst = outBlock.getChannelPointer(c);
 				stoej::xfade<ST>(dst, dry, wet, coeffs, len);
+			}
+
+			for (size_t c = 0; c < numChans; c++) {
+				auto* buff = outBlock.getChannelPointer(c);
+				juce::FloatVectorOperationsBase<ST,int>::multiply(buff, this->getOutLevel(), len);
 			}
 			
 		
@@ -105,24 +121,35 @@ namespace stoej {
 	    }
 
 	    // ========================================================================
-	    void setExampleParam(ST val);
-	    ST getExampleParam();
-	    void setNoiseWidth(ST val)   {        this->noise_generator_.setNoiseWidth(val); }
-	    ST getNoiseWidth()           { return this->noise_generator_.getNoiseWidth(); }
-		void setNoiseDensity(ST val) {        this->noise_density_ = val; }
-		ST getNoiseDensity()         { return this->noise_density_; }
-		void setNoiseMix(ST val)     {        this->noise_mix_ = val; }
-		ST getNoiseMix()             { return this->noise_mix_; }
+	    void setNoiseWidth(ST val)      {        this->noise_generator_.setNoiseWidth(val); }
+	    ST getNoiseWidth()              { return this->noise_generator_.getNoiseWidth(); }
+		void setNoiseDensity(ST val)    {        this->noise_density_ = val; }
+		ST getNoiseDensity()            { return this->noise_density_; }
+		void setNoiseMix(ST val)        {        this->noise_mix_ = val; }
+		ST getNoiseMix()                { return this->noise_mix_; }
+		void setFilterLPCutoff(ST val)  {        this->filter_lp_cutoff_.setTargetValue(val); }
+		ST getFilterLPCutoff()          { return this->filter_lp_cutoff_.getTargetValue(); }
+		void setFilterHPCutoff(ST val)  {	 	 this->filter_hp_cutoff_.setTargetValue(val); }
+		ST getFilterHPCutoff()		    { return this->filter_hp_cutoff_.getTargetValue(); }
+		void setGritEnable(bool enable) {		 this->grit_enable_ = enable; }
+		bool getGritEnable()		    { return this->grit_enable_; }
+		void setOutLevel(ST val)		{		 this->out_level_ = val; }
+		ST getOutLevel()				{ return this->out_level_; }
 
 	private:
-	    juce::SmoothedValue<ST> _exampleParam;
-
+		juce::SmoothedValue<ST> filter_lp_cutoff_;
+		juce::SmoothedValue<ST> filter_hp_cutoff_;
+		bool grit_enable_;
 		ST noise_density_ = ST(1.0);
 		ST noise_mix_ = ST(0.5);
+		ST out_level_ = ST(1.0);
 
+		
 		juce::AudioBuffer<ST> noise_buffer_;
+		juce::dsp::StateVariableTPTFilter<ST> filter_lp_;
+		juce::dsp::StateVariableTPTFilter<ST> filter_hp_;
 
-	    float _sampleRate = 48000.f;
+	    float sample_rate_ = 48000.f;
 
 	    stoej::WhiteNoise<ST> noise_generator_;
 	};
