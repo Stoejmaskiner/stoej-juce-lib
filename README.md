@@ -1,8 +1,11 @@
 # Støjmaskiner // Shared Code
 
+[TOC]
+
 This is code used in all Støjmaskiner plugins, free or not, open source or not. This code remains free and open source and is a peer into how some of our plugins work.
 Please note that this code is intended for use inside of a JUCE project and depends on the JUCE headers being defined. No makefiles or other configuration files are provided
 as you are expected to add this library to an existing project as a simple static dependency.
+
 ## Submodule: `distortion.hpp`
 
 Simple non-linear functions and more complex distortion constructs. Fast variants are available as well for computation on embedded devices.
@@ -51,3 +54,40 @@ Extensions to the (lacking) `cmath` standard library
 
 ### `signum`
 Signum returns 1 if the sign of the input is positive, -1 if it is negative and 0 if it is 0. It is faster than any alternative from the standard library.
+
+
+
+
+
+## Submodule: dsp/transform
+
+Defines matched encoders and decoders to interface from the discrete time linear PCM domain to other domains, such as discrete Fourier domain, u-law PCM, ... Some transformations are fully reversible, some lose information (they are lossy). Some have the deliberate purpose of reducing the size of the signal (compression). Multiple sub-submodules further categorize these.
+
+- Root: misc time-domain lossless transforms
+- /compression: lossless and lossy compression
+- /spectral: spectral transformations (FFT, DWT, EMD)
+
+### Wave cycle decomposer / composer
+
+Extract single wave cycles from a signal, in order to transform them and then assemble them again. Such a technique can be used for quadrant shaping, pitch detection, click-free audio slicing.
+
+@TODO(Lorenzo): use in shitpressor and saturation for dynamic saturation
+
+### Overlap-add decomposer / composer
+
+Overlap-add is a technique used in STFT (short-term Fourier transform) as well as many other spectral and sometimes non-spectral methods, usually it is used in conjunction with another transform (it wraps around it).
+
+### PWM encoder / decoder
+
+Convert a PCM sample to a PWM pulse train with minimal loss of information and then back again
+
+### PDM encoder / decoder
+
+
+
+### Submodule: dsp/transform/spectral
+
+TODO
+
+
+

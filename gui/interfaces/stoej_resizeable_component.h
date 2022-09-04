@@ -33,7 +33,10 @@ namespace stoej {
 		// the implementation should contain all logic necessary to determine
 		// the preferred size, this might not be trivial for composite components
 		// with dynamic children.
-		virtual std::variant<int, DynamicSize> getPreferredHeight() = 0;
+		//
+		// note that in most cases the type of the return variant is obvious
+		// and can safely be unpacked without matching all cases
+		virtual std::variant<int, DynamicSize> getHeight() = 0;
 
 		// used to signal to parent how to decide size for this component
 		// in .setBounds(). Exact value represents unscaled size. The size
@@ -43,7 +46,10 @@ namespace stoej {
 		// the implementation should contain all logic necessary to determine
 		// the preferred size, this might not be trivial for composite components
 		// with dynamic children.
-		virtual std::variant<int, DynamicSize> getPreferredWidth()  = 0;
+		//
+		// note that in most cases the type of the return variant is obvious
+		// and can safely be unpacked without matching all cases
+		virtual std::variant<int, DynamicSize> getWidth()  = 0;
 
 		// parent will call this before setting bounds, this is the scaling
 		// factors to be passed to all children. The dynamic size of children

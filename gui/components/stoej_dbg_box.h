@@ -24,7 +24,7 @@ namespace stoej {
 
 	    void paint (juce::Graphics& g) override
 	    {
-	        const juce::uint64 rand = static_cast<juce::uint64>(this->random_.nextInt64());
+	        const auto rand = static_cast<juce::uint64>(this->random_.nextInt64());
 	        const juce::uint8 r_val = (rand >> 8)  & 0xFF;
 	        const juce::uint8 g_val = (rand >> 16) & 0xFF;
 	        const juce::uint8 b_val = (rand >> 24) & 0xFF;
