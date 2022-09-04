@@ -38,7 +38,7 @@ namespace stoej {
 
 		void paintOverChildren(juce::Graphics& g) override
 		{
-			this->icon_->setColour(0, juce::Colours::red);
+			//this->icon_->replaceColour(juce::Colours::black, juce::Colours::red);
 			this->icon_->drawWithin(g, this->icon_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
 		}
 
