@@ -24,7 +24,7 @@ namespace stoej {
 	enum DynamicSize { e_fill_parent, e_parent_decides };
 
 	class IResizableComponent {
-
+	public:
 		// used to signal to parent how to decide size for this component
 		// in .setBounds(). Exact value represents unscaled size. The size
 		// of the component with an exact size preference will still be
@@ -57,5 +57,6 @@ namespace stoej {
 		//
 		// in the implementation, this should call setDP on all child components
 		virtual void setDP(double dp) = 0;
+
 	};
 }

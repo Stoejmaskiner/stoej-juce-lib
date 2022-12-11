@@ -6,6 +6,44 @@ This is code used in all Støjmaskiner plugins, free or not, open source or not.
 Please note that this code is intended for use inside of a JUCE project and depends on the JUCE headers being defined. No makefiles or other configuration files are provided
 as you are expected to add this library to an existing project as a simple static dependency.
 
+## Submodules Overview
+
+### [Core](core-doc.md)
+
+Basic definitions used across the entire library.
+
+Defined in `stoej_core.h`
+
+### [DSP](dsp/README.md)
+
+Processors and generators are defined here. They all depend on the JUCE dsp namespace.
+
+### [GUI](gui/README.md)
+
+JUCE GUI components are here. These follow a specific API that extends and restricts the standard JUCE GUI API. The API is defined with several interface classes which the components derive from.
+
+### [Utils](utils/README.md)
+
+Various utility functions. Generally small self-contained functions.
+
+### [Templates](templates/README.md)
+
+These are not strictly part of the library, as in they shouldn't be imported. These are just examples that can be copy-pasted to save time.
+
+## Contributing
+
+TODO
+
+## References
+
+TODO
+
+
+
+
+
+==vvv THIS IS ALL DEPRECATED vvv==
+
 ## Submodule: `distortion.hpp`
 
 Simple non-linear functions and more complex distortion constructs. Fast variants are available as well for computation on embedded devices.

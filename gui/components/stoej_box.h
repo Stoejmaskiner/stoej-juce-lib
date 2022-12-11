@@ -27,6 +27,7 @@ namespace stoej {
 		bool draw_left = true;
 		bool draw_top = true;
 		double stroke_thickness = 1.0;
+		bool do_fill = false;
 
 		// the higher the sooner the thickness is rounded up when scaling up,
 		// can be fine-tuned to obtain a specific thickness at a specific scaling
@@ -34,7 +35,10 @@ namespace stoej {
 		juce::Colour stroke_color = juce::Colour(  0,   0,   0);
 		juce::Colour fill_color   = juce::Colour(255, 255, 255);
 
-		Box() = default;
+		Box() {
+			this->setInterceptsMouseClicks(false, false);
+		}
+
 		~Box() override = default;
 
 	    void paint (juce::Graphics& g) override {
@@ -79,6 +83,7 @@ namespace stoej {
 			// Using fillRect instead of drawLine because it is not antialiased
 			// and thus looks sharper and is less expensive to draw
 			// Draw half-thickness lines if not on the edge of the grid.
+			 
 			if (this->draw_left) g.fillRect(tl_x, tl_y, thick, height);
 			else g.fillRect(tl_x, tl_y, half_thick_p, height);
 			if (this->draw_top) g.fillRect(tl_x, tl_y, width, thick);
