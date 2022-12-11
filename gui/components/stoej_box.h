@@ -84,14 +84,17 @@ namespace stoej {
 			// and thus looks sharper and is less expensive to draw
 			// Draw half-thickness lines if not on the edge of the grid.
 			 
-			if (this->draw_left) g.fillRect(tl_x, tl_y, thick, height);
-			else g.fillRect(tl_x, tl_y, half_thick_p, height);
-			if (this->draw_top) g.fillRect(tl_x, tl_y, width, thick);
-			else g.fillRect(tl_x, tl_y, width, half_thick_p);
-			if (this->draw_bottom) g.fillRect(bl_x, bl_y, width, thick);
-			else g.fillRect(bl_x, bl_y_half, width, half_thick_m);
-			if (this->draw_right) g.fillRect(tr_x, tr_y, thick, height);
-			else g.fillRect(tr_x_half, tr_y, half_thick_m, height);
+			//if (this->draw_left) g.fillRect(tl_x, tl_y, thick, height);
+			//else g.fillRect(tl_x, tl_y, half_thick_p, height);
+			//if (this->draw_top) g.fillRect(tl_x, tl_y, width, thick);
+			//else g.fillRect(tl_x, tl_y, width, half_thick_p);
+			//if (this->draw_bottom) g.fillRect(bl_x, bl_y, width, thick);
+			//else g.fillRect(bl_x, bl_y_half, width, half_thick_m);
+			//if (this->draw_right) g.fillRect(tr_x, tr_y, thick, height);
+			//else g.fillRect(tr_x_half, tr_y, half_thick_m, height);
+			g.drawLine(tl_x, tl_y, bl_x, bl_y, dp_);
+
+
 	    }
 
 	    std::variant<int, stoej::DynamicSize> getHeight() override {
