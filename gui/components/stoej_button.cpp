@@ -13,9 +13,10 @@
 
 
 
-stoej::StoejButton::StoejButton(const juce::String& button_name, ButtonVariant b_var, ButtonSize b_size, bool toggleable = false) : juce::Button(button_name), btn_variant_(b_var), btn_size_(b_size) {
+stoej::StoejButton::StoejButton(const juce::String& button_name, ButtonVariant b_var, ButtonSize b_size, bool toggleable = false) : juce::Button(button_name), btn_variant_(b_var), btn_size_(b_size), stoej::IFloatComponent(*this) {
 	this->setClickingTogglesState(toggleable);
 	this->setToggleable(true);
+	this->setBorderWidth(1.0f);
 	//this->addAndMakeVisible(this->bounding_box_);
 	//this->bounding_box_.setInterceptsMouseClicks(false, false);
 }
@@ -25,7 +26,7 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredHeight(
     return {24.0f};
 }
 
-std::variant<float, stoej::DynamicSize> stoej::StoejButton::getPreferredWidth()
+std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 {
     // TODO: performance tuning with constexpr if and templates?
     switch (this->btn_variant_) {
@@ -55,8 +56,8 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 	// toggle button drawing logic
 	if(this->isToggleable()) {
 		// TODO(Lorenzo): got here
-		if (this->getToggleState()) this->bounding_box_.fill_color = juce::Colours::black;
-		else this->bounding_box_.fill_color = juce::Colours::white;
+		if (this->getToggleState()) jassertfalse; //this->background_c_ = juce::Colours::black;
+		else this->background_c_ = juce::Colours::white;
 		
 
     // trigger button drawing logic 
@@ -66,6 +67,8 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 		//g.drawRect(r);
 	}
 	
+	this->drawBackground(g);
+	this->drawBorder(g);
 	
 }
 
