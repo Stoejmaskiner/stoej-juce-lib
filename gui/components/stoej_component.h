@@ -65,14 +65,14 @@ protected:
 	juce::Colour border_c_ = juce::Colours::black;
 	juce::Colour background_c_ = juce::Colours::white;
 	EnabledBorders enabled_borders_ = EnabledBorders::all;
-	juce::Component& parent_;
+	//juce::Component& parent_;
 
 	// draw the integer bounds
 	void dbgDrawIntBounds(juce::Graphics &g) {
 		if constexpr(DEBUG_ENABLE) {
-			auto r = this->parent_.getLocalBounds();
+			//auto r = this->parent_.getLocalBounds();
 			g.setColour(juce::Colour(0x80ff0000));
-			g.drawRect(r);
+			//g.drawRect(r);
 		}
 	}
 
@@ -204,7 +204,7 @@ protected:
 	}
 
 public:
-	IFloatComponent(juce::Component& parent) : parent_(parent) {}
+	IFloatComponent(juce::Component& parent)/* : parent_(parent) */ {}
 	// used to signal to parent how to decide size for this component
 	// in .setBounds(). Exact value represents unscaled size. The size
 	// of the component with an exact size preference will still be
@@ -274,7 +274,7 @@ public:
 	}
 
 	juce::Rectangle<float> getLocalFloatBounds() {
-		return this->floatBounds_ + juce::Point<float>(X_NUDGE, Y_NUDGE) - juce::Point<float>(this->parent_.getX(), this->parent_.getY());
+		return this->floatBounds_ + juce::Point<float>(X_NUDGE, Y_NUDGE) ;//- juce::Point<float>(this->parent_.getX(), this->parent_.getY());
 	}
 
 	// sets all borders
