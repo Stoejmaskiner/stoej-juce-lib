@@ -57,18 +57,20 @@ DEFINE_ENUM_FLAG_OPERATORS(EnabledBorders);
 /// - Float bounds: use setFloatBounds() instead of setBounds()
 /// - Debugging: set the template attribute DebugEnabled to true to show debugging gizmos
 /// </summary>
-class Component : public juce::Component {
+template<class JuceComponent>
+class FloatComponent : public JuceComponent {
 protected:
 	juce::Rectangle<float> floatBounds_;
 	float dp_ = 1.0f;
 	float border_w_ = 0.0f;
 	juce::Colour border_c_ = juce::Colours::black;
+	juce::Colour background_c_ = juce::Colours::white;
 	EnabledBorders enabled_borders_ = EnabledBorders::all;
 
 	// draw the integer bounds
 	void dbgDrawIntBounds(juce::Graphics &g) {
 		if constexpr(DEBUG_ENABLE) {
-			auto r = this->getLocalBounds();
+			auto r = JuceComponent::getLocalBounds();
 			g.setColour(juce::Colour(0x80ff0000));
 			g.drawRect(r);
 		}
@@ -194,8 +196,16 @@ protected:
 		//this->dbgDrawIntBounds(g);
 		//this->dbgDrawFloatBounds(g);
 	}
+	
+	void drawBackground(juce::Graphics& g) {
+		auto r = this->getLocalFloatBounds();
+		g.setColour(this->background_c_);
+		g.fillRect(r);
+	}
 
 public:
+	FloatComponent(const juce::String& component_name) : JuceComponent(component_name) {}
+	FloatComponent() : JuceComponent() {}
 	// used to signal to parent how to decide size for this component
 	// in .setBounds(). Exact value represents unscaled size. The size
 	// of the component with an exact size preference will still be
@@ -210,7 +220,7 @@ public:
 	//virtual std::variant<float, DynamicSize> getPreferredWidth() = 0;
 	virtual std::variant<float, DynamicSize2> getPreferredWidth() { return DynamicSize2::parent_decides; }
 	virtual std::variant<float, DynamicSize2> getPreferredHeight() { return DynamicSize2::parent_decides; }
-	virtual void paint(juce::Graphics& g) override { this->drawBorder(g); }
+	//virtual void paint(juce::Graphics& g) override { this->drawBorder(g); }
 
 	// used to signal to parent how to decide size for this component
 	// in .setBounds(). Exact value represents unscaled size. The size
@@ -265,7 +275,7 @@ public:
 	}
 
 	juce::Rectangle<float> getLocalFloatBounds() {
-		return this->floatBounds_ + juce::Point<float>(X_NUDGE, Y_NUDGE) - juce::Point<float>(this->getX(), this->getY());
+		return this->floatBounds_ + juce::Point<float>(X_NUDGE, Y_NUDGE) - juce::Point<float>(JuceComponent::getX(), JuceComponent::getY());
 	}
 
 	// sets all borders

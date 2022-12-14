@@ -22,7 +22,7 @@
 /*
 */
 namespace stoej {
-    class StoejButton : public juce::Button, public stoej::Component {
+    class StoejButton : public stoej::FloatComponent<juce::Button> {
 	    
     public:
 	    /// @note `e_icon` ignores `ButtonSize`. It is always the same size as `e_tiny`.
@@ -32,8 +32,8 @@ namespace stoej {
         StoejButton(const juce::String& button_name, ButtonVariant, ButtonSize, bool toggleable);
         std::variant<float, DynamicSize2> getPreferredHeight() override;
         std::variant<float, DynamicSize2> getPreferredWidth() override;
-        void resized() override;
-        void paint(juce::Graphics&) override {}
+        //void resized() override;
+        //void paint(juce::Graphics&) override {}
         void paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 
     private:
