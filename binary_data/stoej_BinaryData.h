@@ -4,9 +4,6 @@
 
 namespace stoej_BinaryData
 {
-    extern const char*  Archivo_LICENSE_txt;
-    const int           Archivo_LICENSE_txtSize = 4481;
-
     extern const char*  ArchivoBlack_ttf;
     const int           ArchivoBlack_ttfSize = 119372;
 
@@ -61,14 +58,8 @@ namespace stoej_BinaryData
     extern const char*  ArchivoThinItalic_ttf;
     const int           ArchivoThinItalic_ttfSize = 132448;
 
-    extern const char*  ArchivoBlack_LICENSE_txt;
-    const int           ArchivoBlack_LICENSE_txtSize = 4492;
-
     extern const char*  ArchivoBlackRegular_ttf;
     const int           ArchivoBlackRegular_ttfSize = 89160;
-
-    extern const char*  ArchivoNarrow_LICENSE_txt;
-    const int           ArchivoNarrow_LICENSE_txtSize = 4494;
 
     extern const char*  ArchivoNarrowBold_ttf;
     const int           ArchivoNarrowBold_ttfSize = 63468;
@@ -106,9 +97,6 @@ namespace stoej_BinaryData
     extern const char*  AtkinsonHyperlegibleRegular_ttf;
     const int           AtkinsonHyperlegibleRegular_ttfSize = 53504;
 
-    extern const char*  AtkninsonHyperlegible_LICENSE_txt;
-    const int           AtkninsonHyperlegible_LICENSE_txtSize = 4446;
-
     extern const char*  bookopenlight_svg;
     const int           bookopenlight_svgSize = 545;
 
@@ -132,9 +120,6 @@ namespace stoej_BinaryData
 
     extern const char*  gearsixlight_svg;
     const int           gearsixlight_svgSize = 801;
-
-    extern const char*  IBMPlexMono_LICENSE_txt;
-    const int           IBMPlexMono_LICENSE_txtSize = 4455;
 
     extern const char*  IBMPlexMonoBold_ttf;
     const int           IBMPlexMonoBold_ttfSize = 111944;
