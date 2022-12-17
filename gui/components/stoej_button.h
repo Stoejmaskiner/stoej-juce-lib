@@ -26,7 +26,6 @@ namespace stoej {
     class StoejButton : public stoej::FloatComponent<juce::Button> {
 	    
     public:
-	    /// @note `e_icon` ignores `ButtonSize`. It is always the same size as `e_tiny`.
 	    enum ButtonVariant {e_text, e_icon};
         enum ButtonSize {e_tiny, e_small, e_medium, e_large};
 
