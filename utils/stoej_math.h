@@ -31,11 +31,26 @@ namespace stoej {
     inline float  clamp_unity(float x) {  return clamp(x, -1.f, 1.f); }
     inline double clamp_unity(double x) { return clamp(x, -1., 1.); }
 
-    inline float  lerp(float a, float b, float t) {    return a * (1.f - t) + b * t; }
-    inline double lerp(double a, double b, double t) { return a * (1. - t)  + b * t; }
+    inline float  lerp(float a, float b, float t) { return a * (1.f - t) + b * t; }
+    inline double lerp(double a, double b, double t) { return a * (1. - t) + b * t; }
+    template<typename T> juce::Point<T> lerp(juce::Point<T> a, juce::Point<T> b, double t) { return a * (1. - t) + b * t; }
+    template<typename T> juce::Line<T> lerp(juce::Line<T> a, juce::Line<T> b, double t) {
+        return juce::Line<T>(
+            lerp(a.getStart(), b.getStart(), t),
+            lerp(a.getEnd(), b.getEnd(), t)
+        );
+    }
+    template<typename T> juce::Rectangle<T> lerp(juce::Rectangle<T> a, juce::Rectangle<T> b, double t) {
+        return juce::Rectangle<T>(
+            lerp(a.getTopLeft(), b.getTopLeft(), t),
+            lerp(a.getTopRight(), b.getTopRight(), t),
+            lerp(a.getBottomLeft(), b.getBottomLeft(), t),
+            lerp(a.getBottomRight(), b.getBottomRight(), t)
+        );
+    }
 
     STOEJ_FT_
-    inline FT_ clerp(float a, float b, float t) { return lerp(a, b, clamp_unity(t)); }
+    inline FT_ clerp(FT_ a, FT_ b, FT_ t) { return lerp(a, b, clamp_max(t, FT_(1.0))); }
 
     inline float slerp(float a, float b, float t) {
         const float kb = t * t * (3.f - 2.f * t);

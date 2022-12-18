@@ -12,6 +12,9 @@
 #include <JuceHeader.h>
 #include "gui/components/stoej_component.h"
 #include "stoej_Types.h"
+#include "utils/stoej_math.h"
+#include "binary_data/stoej_Fonts.h"
+#include "utils/stoej_graphics_utils.h"
 
 namespace stoej {
     class StoejSlider : public stoej::FloatComponent<juce::Slider> {
@@ -33,5 +36,7 @@ namespace stoej {
         ValueUnit unit_;
         bool is_inverted_;
         //Box bounding_box_;
+        juce::Label label_box_;
+        juce::Label value_box_;
     };
 }
