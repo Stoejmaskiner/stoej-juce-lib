@@ -14,7 +14,7 @@
 #include "stoej_Types.h"
 
 namespace stoej {
-    class StoejSlider : stoej::FloatComponent<juce::Slider> {
+    class StoejSlider : public stoej::FloatComponent<juce::Slider> {
     public:
         // enum SliderVariant { minimal, mod };
         // enum SliderSize {};

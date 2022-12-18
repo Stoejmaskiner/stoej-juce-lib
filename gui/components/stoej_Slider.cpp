@@ -15,6 +15,8 @@ stoej::StoejSlider::StoejSlider(const juce::String& component_name, const char* 
 {
     this->setSliderStyle(style);
     this->setBorderWidth(1.0f);
+    this->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    // TODO: screenreader support
 }
 
 void stoej::StoejSlider::paint(juce::Graphics& g)
