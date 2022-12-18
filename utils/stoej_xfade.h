@@ -13,7 +13,7 @@
 #include "utils/stoej_math.h"
 #include <utility>
 #include <JuceHeader.h>
-#include <gcem.hpp>
+//#include <gcem.hpp>
 #include "utils/stoej_compile_time_utils.h"
 
 namespace stoej {

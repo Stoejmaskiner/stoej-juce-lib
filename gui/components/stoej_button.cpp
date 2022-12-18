@@ -64,7 +64,7 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredHeight(
     return {24.0f};
 }
 
-std::variant<float, stoej::DynamicSize22> stoej::StoejButton::getPreferredWidth()
+std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 {
     // TODO: performance tuning with constexpr if and templates?
 	switch (this->btn_size_) {
@@ -88,8 +88,8 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 	this->setBorderWidth(1.0f);
 	this->drawBorder(g);
 
-	if (shouldDrawButtonAsDown) jassertfalse;
-	if (shouldDrawButtonAsHighlighted) jassertfalse;
+	//if (shouldDrawButtonAsDown) jassertfalse;
+	//if (shouldDrawButtonAsHighlighted) jassertfalse;
 
 	// toggle button drawing logic
 	if(this->isToggleable()) {
