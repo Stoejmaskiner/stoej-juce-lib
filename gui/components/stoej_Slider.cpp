@@ -59,5 +59,5 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     g.setFont(12.f * dp_ * stoej::PT_2_PX);
     g.drawText(this->label_, r1, juce::Justification::centred);
 
-    g.drawText(std::to_string(v), r2, juce::Justification::centred);
+    g.drawText(stoej::format_float_hertz(v), r2, juce::Justification::centred);
 }
