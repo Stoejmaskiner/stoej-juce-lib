@@ -17,9 +17,11 @@ stoej::StoejSlider::StoejSlider(const juce::String& component_name, const char* 
     this->setBorderWidth(1.0f);
     this->setRange(0.0, 1.0);
     this->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    this->addAndMakeVisible(this->label_box_);
-    this->addAndMakeVisible(this->value_box_);
+    //this->addAndMakeVisible(this->label_box_);
+    //this->addAndMakeVisible(this->value_box_);
     // TODO: screenreader support
+    // TODO: editable value
+    // TODO: custom mouse area to drawn slider only
 }
 
 /*
@@ -48,16 +50,32 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     //auto v = stoej::clamp(this->getValue(), 0.005, 0.995);
     auto v = this->getValue();
     auto p = this->valueToProportionOfLength(v);
-    r3.removeFromTop(r3.getHeight() * (1. - p));
+    if(this->is_inverted_) r3.removeFromBottom(r3.getHeight() * p);
+    else r3.removeFromTop(r3.getHeight() * (1. - p));
     g.setColour(juce::Colours::grey);
     g.fillRect(r3);
     g.setColour(this->border_c_);
-    g.drawLine(juce::Line(r3.getTopLeft(), r3.getTopRight()), 1.0f * dp_);
+    if(this->is_inverted_) g.drawLine(juce::Line(r3.getBottomLeft(), r3.getBottomRight()), 1.0f * dp_);
+    else g.drawLine(juce::Line(r3.getTopLeft(), r3.getTopRight()), 1.0f * dp_);
     g.setColour(this->border_c_);
     g.drawRect(r, 1.0f * dp_);
     g.setFont(get_font_archivo_narrow());
     g.setFont(12.f * dp_ * stoej::PT_2_PX);
     g.drawText(this->label_, r1, juce::Justification::centred);
 
-    g.drawText(stoej::format_float_hertz(v), r2, juce::Justification::centred);
+    switch (this->unit_) {
+    case hertz:
+        g.drawText(stoej::format_float_hertz(v), r2, juce::Justification::centred);
+        break;
+    case percent:
+        g.drawText(stoej::format_float_percent(v), r2, juce::Justification::centred);
+        break;
+    case level2db:
+        g.drawText(stoej::format_float_level2db(v), r2, juce::Justification::centred);
+        break;
+    case no_unit:
+    default:
+        g.drawText(stoej::format_float_no_unit(v), r2, juce::Justification::centred);
+    }
+    
 }

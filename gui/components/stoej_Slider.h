@@ -36,7 +36,7 @@ namespace stoej {
         ValueUnit unit_;
         bool is_inverted_;
         //Box bounding_box_;
-        juce::Label label_box_;
-        juce::Label value_box_;
+        //juce::Label label_box_;
+        //juce::Label value_box_;
     };
 }

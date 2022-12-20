@@ -62,4 +62,9 @@ namespace stoej {
         const double ka = 1.f - ka;
         return ka * a + kb * b;
     }
+
+    inline float db2a(float db) { return std::powf(10.f, db / 20.f); }
+    inline double db2a(double db) { return std::pow(10., db / 20.); }
+    inline float a2db(float a) { return 20.f * std::log10f(a); }
+    inline double a2db(double a) { return 20. * std::log10(a); }
 }

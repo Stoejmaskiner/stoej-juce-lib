@@ -11,5 +11,5 @@
 #pragma once
 
 namespace stoej {
-    enum ValueUnit { no_unit, hertz, decibel, percent, octaves, semitones, cents, custom };
+    enum ValueUnit { no_unit, hertz, decibel, percent, octaves, semitones, cents, custom, level2db };
 }
