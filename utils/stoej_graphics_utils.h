@@ -67,4 +67,9 @@ namespace stoej {
     }
 
 
+    inline void draw_rect_f(juce::Graphics& g, juce::Rectangle<float> r, float thickness) {
+        g.drawRoundedRectangle(r, 0.0f, thickness);
+    }
+
+
 }

@@ -10,10 +10,10 @@
 
 #include "stoej_Slider.h"
 
-stoej::StoejSlider::StoejSlider(const juce::String& component_name, const char* label, juce::Slider::SliderStyle style, ValueUnit unit, bool is_inverted) :
+stoej::StoejSlider::StoejSlider(const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
     stoej::FloatComponent<juce::Slider>(component_name), label_(label), is_inverted_(is_inverted), unit_(unit)
 {
-    this->setSliderStyle(style);
+    this->setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     this->setBorderWidth(1.0f);
     this->setRange(0.0, 1.0);
     this->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
@@ -58,7 +58,7 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     if(this->is_inverted_) g.drawLine(juce::Line(r3.getBottomLeft(), r3.getBottomRight()), 1.0f * dp_);
     else g.drawLine(juce::Line(r3.getTopLeft(), r3.getTopRight()), 1.0f * dp_);
     g.setColour(this->border_c_);
-    g.drawRect(r, 1.0f * dp_);
+    stoej::draw_rect_f(g, r, 1.0f * dp_);
     g.setFont(get_font_archivo_narrow());
     g.setFont(12.f * dp_ * stoej::PT_2_PX);
     g.drawText(this->label_, r1, juce::Justification::centred);

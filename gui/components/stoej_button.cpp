@@ -85,8 +85,8 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
 	auto r = getLocalFloatBounds();
-	this->setBorderWidth(1.0f);
-	this->drawBorder(g);
+	//this->setBorderWidth(1.0f);
+	//this->drawBorder(g);
 
 	//if (shouldDrawButtonAsDown) jassertfalse;
 	//if (shouldDrawButtonAsHighlighted) jassertfalse;
