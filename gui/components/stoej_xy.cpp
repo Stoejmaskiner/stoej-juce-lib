@@ -9,3 +9,46 @@
 */
 
 #include "stoej_xy.h"
+
+stoej::XY::XY()
+{
+    this->x_.addListener(this);
+    this->y_.addListener(this);
+}
+
+void stoej::XY::paint(juce::Graphics& g)
+{
+
+    g.setColour(juce::Colours::black);
+    g.drawVerticalLine((float) this->x_.getValue() * this->getLocalFloatBounds().getWidth(), this->getLocalFloatBounds().getTopLeft().y, this->getLocalFloatBounds().getBottomLeft().y);
+    g.drawHorizontalLine((float) this->y_.getValue() * this->getLocalFloatBounds().getHeight(), this->getLocalFloatBounds().getTopLeft().x, this->getLocalFloatBounds().getTopRight().x);
+    
+}
+
+void stoej::XY::mouseDown(const juce::MouseEvent& e)
+{
+    float x = e.getMouseDownX() / this->getLocalFloatBounds().getWidth();
+    float y = e.getMouseDownY() / this->getLocalFloatBounds().getHeight();
+    this->x_ = stoej::clamp(x, 0.f, 1.f);
+    this->y_ = stoej::clamp(y, 0.f, 1.f);
+    this->repaint();
+}
+
+void stoej::XY::mouseDrag(const juce::MouseEvent& e)
+{
+    float x = e.x / this->getLocalFloatBounds().getWidth();
+    float y = e.y / this->getLocalFloatBounds().getHeight();
+    this->x_ = stoej::clamp(x, 0.f, 1.f);
+    this->y_ = stoej::clamp(y, 0.f, 1.f);
+    this->repaint();
+}
+
+juce::Value& stoej::XY::getXValueObject()
+{
+    return this->x_;
+}
+
+juce::Value& stoej::XY::getYValueObject()
+{
+    return this->y_;
+}
