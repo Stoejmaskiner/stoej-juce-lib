@@ -8,6 +8,10 @@ namespace stoej {
 
     // TODO: add SIMD implementations
 
+    constexpr float PI =  3.1415927f;
+    constexpr double PI_D = 3.141592653589793;
+    constexpr float TAU =  6.2831854;
+    constexpr double TAU_D = 6.283185307179586;
 
     inline float sign(float x) { return std::copysign(1.0f, x); }
     inline double sign(double x) { return std::copysign(1.0, x); }

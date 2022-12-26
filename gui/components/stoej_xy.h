@@ -14,7 +14,7 @@
 #include "utils/stoej_math.h"
 
 namespace stoej {
-    class XY : public stoej::FloatComponent<juce::Component>, juce::Value::Listener {
+    class XY : public stoej::FloatComponent<juce::Component>, public juce::Value::Listener {
     public:
         XY();
         void paint(juce::Graphics& g) override;
@@ -27,9 +27,16 @@ namespace stoej {
 
         juce::Value& getXValueObject();
         juce::Value& getYValueObject();
+        juce::NormalisableRange<float> getXRange() { return this->x_range_; }
+        void setXRange(juce::NormalisableRange<float> r) { this->x_range_ = r; }
+        juce::NormalisableRange<float> getYRange() { return this->y_range_; }
+        void setYRange(juce::NormalisableRange<float> r) { this->y_range_ = r; }
 
-    private:
+    protected:
         juce::Value x_;
         juce::Value y_;
+        
+        juce::NormalisableRange<float> x_range_;
+        juce::NormalisableRange<float> y_range_;
     };
 }

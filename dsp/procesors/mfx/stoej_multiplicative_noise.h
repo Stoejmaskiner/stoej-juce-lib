@@ -70,7 +70,7 @@ namespace stoej {
 					// grit adds additional non-linearity
 					if (this->grit_enable_)
 					{
-						in_samp = -stoej::clamp_min(in_samp, ST(0.0));
+						in_samp = stoej::clamp_min(in_samp, ST(0.0));
 					}
 					// low density noise gets very spiky, so safety clipping to avoid extreme values
 					noise_buff[i] = stoej::safety_clip_3db(noise_samp * gain_compensate * in_samp);

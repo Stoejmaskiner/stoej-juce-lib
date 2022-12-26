@@ -24,6 +24,7 @@ namespace stoej {
 	STOEJ_FT_
 	FT_ safety_clip_3db(FT_ x)
 	{
+		// TODO: hardcode limit, and remove dependency to gcem
 		constexpr FT_ limit = static_cast<FT_>(stoej::const_db2a<3.0>());
 		return stoej::clamp_abs(x, limit);
 	}
