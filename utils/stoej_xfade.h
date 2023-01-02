@@ -98,15 +98,37 @@ namespace stoej {
         };
     }
 
+    /// <summary>
+    /// overwrites dst buffer with result
+    /// </summary>
     STOEJ_FT_
     void xfade (FT_* dst, const FT_* src, Coeffs<FT_> coeffs, int len) {
 	    juce::FloatVectorOperationsBase<FT_,int>::multiply(dst, coeffs.a, len);
         juce::FloatVectorOperationsBase<FT_,int>::addWithMultiply(dst, src, coeffs.b, len);
     }
 
+    /// <summary>
+    /// does not overwrite source buffers
+    /// </summary>
     STOEJ_FT_
     void xfade (FT_* dst, const FT_* src1, const FT_* src2, Coeffs<FT_> coeffs, int len) {
 	    juce::FloatVectorOperationsBase<FT_,int>::multiply(dst, src1, coeffs.a, len);
         juce::FloatVectorOperationsBase<FT_,int>::addWithMultiply(dst, src2, coeffs.b, len);
+    }
+
+    /// <summary>
+    /// single sample crossfade
+    /// </summary>
+    STOEJ_FT_
+    FT_ xfade(FT_ a, FT_ b, Coeffs<FT_> coeffs) {
+        return a * coeffs.a + b * coeffs.b;
+    }
+
+    /// <summary>
+    /// single sample linear crossfade, is an alias for stoej::lerp()
+    /// </summary>
+    STOEJ_FT_ inline
+    FT_ xfade(FT_ a, FT_ b, FT_ t) {
+        return stoej::lerp(a, b, t);
     }
 }

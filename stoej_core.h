@@ -11,6 +11,7 @@
 #pragma once
 #include <concepts>
 
+// NOTE: for internal use only!
 // defines a templated type FT that satisfies the std::floating_point<FT_> concept
 #define STOEJ_FT_ template<typename FT_> requires std::floating_point<FT_>
 
