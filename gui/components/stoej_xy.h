@@ -23,7 +23,7 @@ namespace stoej {
         void valueChanged(juce::Value& _) override { this->repaint(); }
         //void valueChanged(juce::Value& value) { this->repaint(); }
 
-        // TODO: interface with APVTS directly to avoid dependence on sliders
+        // TODO: interface with APVTS directly with slider attachment or similar
 
         juce::Value& getXValueObject();
         juce::Value& getYValueObject();
