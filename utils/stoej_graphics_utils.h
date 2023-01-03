@@ -11,6 +11,8 @@
 #pragma once
 #include "utils/stoej_math.h"
 
+// TODO: rename to gui utils, as "graphics" implies OpenGL
+
 namespace stoej {
 	constexpr double PT_2_PX = 1.333333;
 	constexpr double PX_2_PT = 0.75;
@@ -69,6 +71,23 @@ namespace stoej {
 
     inline void draw_rect_f(juce::Graphics& g, juce::Rectangle<float> r, float thickness) {
         g.drawRoundedRectangle(r, 0.0f, thickness);
+    }
+
+    inline juce::Rectangle<float> int_rect_2_float_rect(juce::Rectangle<int> r) {
+        return juce::Rectangle<float>(
+            float(r.getTopLeft().getX()),
+            float(r.getTopLeft().getY()),
+            float(r.getWidth()),
+            float(r.getHeight()));
+    }
+
+    [[deprecated("TODO: undeprecate this when you have fixed all the janky places where you used this as a crutch")]]
+    inline juce::Rectangle<int> float_rect_2_int_rect(juce::Rectangle<float> r) {
+        return juce::Rectangle<int>(
+            int(r.getTopLeft().getX()),
+            int(r.getTopLeft().getY()),
+            int(r.getWidth()),
+            int(r.getHeight()));
     }
 
 
