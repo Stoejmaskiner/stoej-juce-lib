@@ -10,6 +10,8 @@
 
 #include "stoej_Ticker.h"
 
+// TODO: should scroll on long text, like -you know- a ticker
+
 stoej::Ticker::Ticker(const juce::String& component_name) :
     stoej::FloatComponent<juce::Label>(component_name) 
 {
@@ -31,8 +33,9 @@ void stoej::Ticker::mouseExit(const juce::MouseEvent& event)
 void stoej::Ticker::paint(juce::Graphics& g)
 {
     auto r = this->getLocalFloatBounds();
-    g.setFont(get_font_archivo_narrow());   // TODO: atkinson
-    g.setFont(12.f * dp_ * stoej::PT_2_PX);
-    g.drawText(this->active_tooltip_, r, juce::Justification::centred);
+    g.setFont(stoej::get_font_atkinson_hyperlegible());
+    g.setFont(11.f * dp_ * stoej::PT_2_PX);
+    r.removeFromLeft(6.f * dp_);
+    g.drawText(this->active_tooltip_, r, juce::Justification::left);
     this->drawBorder(g);
 }

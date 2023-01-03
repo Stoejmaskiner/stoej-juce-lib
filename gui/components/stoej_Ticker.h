@@ -33,7 +33,7 @@ namespace stoej {
         //void paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 
     private:
-        juce::String active_tooltip_ = "AAAA";
+        juce::String active_tooltip_ = "";
         //Box bounding_box_;
         //juce::Label label_box_;
         //juce::Label value_box_;
