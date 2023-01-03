@@ -33,6 +33,8 @@ void stoej::StoejSlider::resized()
 }
 */
 
+
+
 void stoej::StoejSlider::paint(juce::Graphics& g)
 {
     auto r = this->getLocalFloatBounds();
