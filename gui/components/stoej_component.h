@@ -263,10 +263,11 @@ public:
 		this->floatBounds_ = r;
 		auto top_left = r.getTopLeft();
 		auto bottom_right = r.getBottomRight();
-		int left = juce::roundToInt(std::floor(top_left.getX() - this->border_w_ * dp_ * 0.5f + X_NUDGE));
-		int top = juce::roundToInt(std::floor(top_left.getY() - this->border_w_ * dp_ * 0.5f + Y_NUDGE));
-		int right = juce::roundToInt(std::ceil(bottom_right.getX() + this->border_w_ * dp_ * 0.5f + X_NUDGE));
-		int bottom = juce::roundToInt(std::ceil(bottom_right.getY() + this->border_w_ * dp_ * 0.5f + Y_NUDGE));
+		// FIXME: here the -1, and +1 are superfluous but necessary in some (which?) edge cases. It only happens at init time
+		int left = juce::roundToInt(std::floor(top_left.getX() - this->border_w_ * dp_ * 0.5f + X_NUDGE)) - 1;
+		int top = juce::roundToInt(std::floor(top_left.getY() - this->border_w_ * dp_ * 0.5f + Y_NUDGE)) - 1;
+		int right = juce::roundToInt(std::ceil(bottom_right.getX() + this->border_w_ * dp_ * 0.5f + X_NUDGE)) + 1;
+		int bottom = juce::roundToInt(std::ceil(bottom_right.getY() + this->border_w_ * dp_ * 0.5f + Y_NUDGE)) + 1;
 		this->setBounds(left, top, right - left, bottom - top);
 	}
 

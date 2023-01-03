@@ -122,6 +122,8 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 
 	this->setBorderWidth(1.0f);
 	this->drawBorder(g);
+
+
 	
 	
 	
