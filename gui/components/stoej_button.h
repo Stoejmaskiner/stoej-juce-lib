@@ -26,26 +26,58 @@ namespace stoej {
     class StoejButton : public stoej::FloatComponent<juce::Button> {
 	    
     public:
-	    enum ButtonVariant {e_text, e_icon};
-        enum ButtonSize {e_tiny, e_small, e_medium, e_large};
+	    
+        enum ButtonSize {tiny, small, medium, large};
 
-        StoejButton(const juce::String& button_name, ButtonVariant, ButtonSize, bool toggleable = false);
-        StoejButton(const juce::String& button_name, ButtonSize, const std::unique_ptr<juce::Drawable>& icon, bool toggleable = false);
-        StoejButton(const juce::String& button_name, ButtonSize, const char* label, const juce::Font& font, bool toggleable = false);
+        // simple button with text label, optionally toggleable
+        StoejButton(const juce::String& name, ButtonSize, const juce::String& label, bool toggleable = false);
+
+        // toggleable button with separate on and off labels
+        StoejButton(const juce::String& name, ButtonSize, const juce::String& label_on, juce::String& label_off);
+
+        // simple button with icon, optionally toggleable
+        StoejButton(const juce::String& name, ButtonSize, std::unique_ptr<juce::Drawable> icon, bool toggleable = false);
+
+        // toggleable button with separate on and off icons
+        StoejButton(const juce::String& name, ButtonSize, std::unique_ptr<juce::Drawable> icon_on, std::unique_ptr<juce::Drawable> icon_off);
+        
         std::variant<float, DynamicSize2> getPreferredHeight() override;
         std::variant<float, DynamicSize2> getPreferredWidth() override;
         //void resized() override;
         //void paint(juce::Graphics&) override {}
-        void paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+        
+        //void setLabel(juce::String label);
+        //void setSeparateOnOffLabels(juce::String label_on, juce::String label_off);
+        //void setIcon(std::unique_ptr<juce::Drawable> icon);
+        //void setSeparateOnOffLabels(std::unique_ptr<juce::Drawable> icon_on, std::unique_ptr<juce::Drawable> icon_off);
 
     private:
-        //double dp_ = 1.0;
-        //TilePosition tile_position_ = e_all_edges;
-        ButtonVariant btn_variant_;
+
+        // fat constructor
+        StoejButton(
+            const juce::String& name,
+            ButtonSize size,
+            const juce::String& label_on,
+            const juce::String& label_off,
+            const std::unique_ptr<juce::Drawable> icon_on_,
+            const std::unique_ptr<juce::Drawable> icon_off_,
+            bool toggleable,
+            bool separate_on_off_looks,
+            bool use_icon);
+
+        void paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+        void paintOn();
+        void paintOff();
+
         ButtonSize btn_size_;
-        const std::unique_ptr<juce::Drawable>& icon_;
-        const char* label_;
-        const juce::Font& font_;
+        const std::unique_ptr<juce::Drawable> icon_on_;
+        const std::unique_ptr<juce::Drawable> icon_off_;
+        const juce::String& label_on_;
+        const juce::String& label_off_;
+        bool separate_on_off_looks_;
+        bool use_icon_;
         //Box bounding_box_;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StoejButton)
     };
 }

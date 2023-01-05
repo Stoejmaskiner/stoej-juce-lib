@@ -10,54 +10,49 @@
 
 #include "stoej_button.h"
 
+#include "binary_data/stoej_Fonts.h"
 
+
+
+
+
+stoej::StoejButton::StoejButton(const juce::String& name, ButtonSize size, const juce::String& label, bool toggleable)
+	: StoejButton(name, size, label, "", nullptr, nullptr, toggleable, false, false) {}
+
+stoej::StoejButton::StoejButton(const juce::String& name, ButtonSize size, const juce::String& label_on, juce::String& label_off)
+	: StoejButton(name, size, label_on, label_off, nullptr, nullptr, true, true, false) {}
+
+stoej::StoejButton::StoejButton(const juce::String& name, ButtonSize size, std::unique_ptr<juce::Drawable> icon, bool toggleable)
+	: StoejButton(name, size, "", "", std::move(icon), nullptr, toggleable, false, true) {}
+
+stoej::StoejButton::StoejButton(const juce::String& name, ButtonSize size, std::unique_ptr<juce::Drawable> icon_on, std::unique_ptr<juce::Drawable> icon_off)
+	: StoejButton(name, size, "", "", std::move(icon_on), std::move(icon_off), true, true, true) {}
 
 
 stoej::StoejButton::StoejButton(
-			const juce::String& button_name, 
-			ButtonVariant b_var, 
-			ButtonSize b_size, 
-			bool toggleable) : 
-		btn_variant_(b_var), 
-		btn_size_(b_size), 
-		stoej::FloatComponent<juce::Button>(button_name),
-		icon_(nullptr),
-		label_((char*) nullptr),
-		font_(juce::Font()) {
+	const juce::String& name,
+	ButtonSize size,
+	const juce::String& label_on,
+	const juce::String& label_off,
+	std::unique_ptr<juce::Drawable> icon_on,
+	std::unique_ptr<juce::Drawable> icon_off,
+	bool toggleable,
+	bool separate_on_off_looks,
+	bool use_icon)
+	:
+	stoej::FloatComponent<juce::Button>(name),
+	btn_size_(size),
+	label_on_(label_on),
+	label_off_(label_off),
+	icon_on_(std::move(icon_on)),
+	icon_off_(std::move(icon_off)),
+	separate_on_off_looks_(separate_on_off_looks),
+	use_icon_(use_icon)
+{
 	this->setClickingTogglesState(toggleable);
 	this->setToggleable(toggleable);
 }
 
-stoej::StoejButton::StoejButton(
-			const juce::String& button_name,
-			ButtonSize b_size,
-			const std::unique_ptr<juce::Drawable>& icon,
-			bool toggleable) : 
-		btn_variant_(ButtonVariant::e_icon),
-		btn_size_(b_size),
-		stoej::FloatComponent<juce::Button>(button_name),
-		icon_(icon),
-		label_((char*) nullptr),
-		font_(juce::Font()) {
-	this->setClickingTogglesState(toggleable);
-	this->setToggleable(toggleable);
-}
-
-stoej::StoejButton::StoejButton(
-			const juce::String& button_name,
-			ButtonSize b_size,
-			const char* label,
-			const juce::Font& font,
-			bool toggleable) :
-		btn_variant_(ButtonVariant::e_text),
-		btn_size_(b_size),
-		stoej::FloatComponent<juce::Button>(button_name),
-		icon_(nullptr),
-		label_(label),
-		font_(font) {
-	this->setClickingTogglesState(toggleable);
-	this->setToggleable(toggleable);
-}
 
 std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredHeight()
 {
@@ -68,13 +63,13 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 {
     // TODO: performance tuning with constexpr if and templates?
 	switch (this->btn_size_) {
-	case e_tiny:
+	case tiny:
 		return { 24.0f };
-	case e_small:
+	case small:
 		return { 36.0f };
-	case e_medium:
+	case medium:
 		return { 48.0f };
-	case e_large:
+	case large:
 		return { 60.0f };
 	default:
 		jassertfalse;
@@ -108,16 +103,15 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 
 	this->drawBackground(g);
 
-	switch (this->btn_variant_) {
-	case e_text:
+	if (!this->use_icon_) {
 		if (this->getToggleState()) g.setColour(juce::Colours::white);
 		else g.setColour(juce::Colours::black);
-		g.setFont(this->font_);
+		g.setFont(stoej::get_font_archivo_narrow());
 		g.setFont(13.0 * dp_ * stoej::PT_2_PX);
-		g.drawText(this->label_, r, juce::Justification::centred);   // draw some placeholder text
-		break;
-	case e_icon:
-		break;
+		g.drawText(this->label_on_, r, juce::Justification::centred);   // draw some placeholder text
+	}
+	else {
+		jassertfalse;	// TODO
 	}
 
 	this->setBorderWidth(1.0f);
@@ -128,6 +122,17 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 	
 	
 }
+
+void stoej::StoejButton::paintOn()
+{
+}
+
+void stoej::StoejButton::paintOff()
+{
+}
+
+
+
 
 
 
