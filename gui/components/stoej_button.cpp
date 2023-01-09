@@ -21,7 +21,6 @@ stoej::StoejButton::StoejButton(
 	const std::unique_ptr<juce::Drawable>& icon_on,
 	const std::unique_ptr<juce::Drawable>& icon_off,
 	bool toggleable,
-	bool separate_on_off_looks,
 	bool use_icon)
 	:
 	stoej::FloatComponent<juce::Button>(name),
@@ -30,7 +29,6 @@ stoej::StoejButton::StoejButton(
 	label_off_(label_off),
 	icon_on_(icon_on),
 	icon_off_(icon_off),
-	separate_on_off_looks_(separate_on_off_looks),
 	use_icon_(use_icon)
 {
 	this->setClickingTogglesState(toggleable);
@@ -62,116 +60,66 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 	}
 }
 
+void stoej::StoejButton::resized()
+{
+	auto r = this->getLocalFloatBounds();
+	r.reduce(3 * dp_, 3 * dp_);
+	this->icon_on_->setBounds(r.toNearestInt());
+	this->icon_off_->setBounds(r.toNearestInt());
+}
+
 
 void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
 	bool pressed = this->isToggleable() && this->getToggleState() || !this->isToggleable() && shouldDrawButtonAsDown;
-
-	if (this->separate_on_off_looks_)
-		if (this->use_icon_) this->paintTwoIcons(g, pressed);
-		else this->paintTwoLabels(g, pressed);
-	else
-		if (this->use_icon_) this->paintOneIcon(g, pressed);
-		else this->paintOneLabel(g, pressed);
-	
-	/*
-	//this->setBorderWidth(1.0f);
-	//this->drawBorder(g);
-
-	//if (shouldDrawButtonAsDown) jassertfalse;
-	//if (shouldDrawButtonAsHighlighted) jassertfalse;
-
-	// toggle button drawing logic
-	if(this->isToggleable()) {
-		// TODO(Lorenzo): got here
-		if (this->getToggleState()) this->background_c_ = juce::Colours::black; //this->bounding_box_.fill_color = juce::Colours::black;
-		else this->background_c_ = juce::Colours::white;
-    // trigger button drawing logic 
-	} else {
-		//if (shouldDrawButtonAsDown) g.setColour(juce::Colours::red);
-		//if (!shouldDrawButtonAsDown) g.setColour(juce::Colours::black);
-		//g.drawRect(r);
-	}
-	this->drawBackground(g);
-
-
-	if (!this->use_icon_) {
-		if (this->getToggleState()) g.setColour(juce::Colours::white);
-		else g.setColour(juce::Colours::black);
-		g.setFont(stoej::get_font_archivo_narrow());
-		g.setFont(13.0 * dp_ * stoej::PT_2_PX);
-		g.drawText(this->label_on_, r, juce::Justification::centred);   // draw some placeholder text
-	}
-	else {
-		this->icon_on_->drawWithin(g, this->icon_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-	}
-
-	this->setBorderWidth(1.0f);
-	this->drawBorder(g);
-
-
-	
-	
-	*/
+	if (this->use_icon_) this->paintIcon(g, pressed);
+	else this->paintLabel(g, pressed);
 }
 
-void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
-{
+void stoej::StoejButton::paintLabel(juce::Graphics& g, bool pressed) {
 	auto r = this->getLocalFloatBounds();
 	if (pressed) {
 		this->background_c_ = juce::Colours::black;
 		this->drawBackground(g);
 		g.setColour(juce::Colours::white);
-		r.reduce(3 * dp_, 3 * dp_);
-		this->icon_on_->setBounds(r.toNearestInt());
-		// TODO: how to change the colour of this icon???
-		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		g.setFont(stoej::get_font_archivo_narrow());
+		g.setFont(13.0f * dp_ * stoej::PT_2_PX);
+		g.drawText(this->label_on_, r, juce::Justification::centred);
+
 	}
 	else {
 		this->background_c_ = juce::Colours::white;
 		this->drawBackground(g);
 		g.setColour(juce::Colours::black);
-		r.reduce(3 * dp_, 3 * dp_);
-		this->icon_on_->setBounds(r.toNearestInt());
-		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		g.setFont(stoej::get_font_archivo_narrow());
+		g.setFont(13.0f * dp_ * stoej::PT_2_PX);
+		g.drawText(this->label_off_, r, juce::Justification::centred);
 	}
 	this->drawBorder(g);
 }
 
-void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
+void stoej::StoejButton::paintIcon(juce::Graphics& g, bool pressed)
 {
-	// TODO:
-	jassertfalse;
-}
-
-void stoej::StoejButton::paintOneLabel(juce::Graphics& g, bool pressed)
-{
+	auto r = this->getLocalFloatBounds();
 	if (pressed) {
 		this->background_c_ = juce::Colours::black;
 		this->drawBackground(g);
-		this->paintLabel(g, this->label_on_, juce::Colours::white);
+		// TODO: drawables should be stored as paths, instead of this recolouring bullshite
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::white);
+		this->icon_on_->drawWithin(g, icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_on_->replaceColour(juce::Colours::white, stoej::Colours::meta_unassigned);
 	}
 	else {
 		this->background_c_ = juce::Colours::white;
 		this->drawBackground(g);
-		this->paintLabel(g, this->label_on_, juce::Colours::black);
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::black);
+		this->icon_on_->drawWithin(g, icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_on_->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
 	}
 	this->drawBorder(g);
 }
 
-void stoej::StoejButton::paintTwoLabels(juce::Graphics& g, bool pressed)
-{
-	// TODO:
-	jassertfalse;
-}
 
-void stoej::StoejButton::paintLabel(juce::Graphics& g, juce::String label, juce::Colour c) {
-	auto r = this->getLocalFloatBounds();
-	g.setColour(c);
-	g.setFont(stoej::get_font_archivo_narrow());
-	g.setFont(13.0f * dp_ * stoej::PT_2_PX);
-	g.drawText(label, r, juce::Justification::centred);
-}
 
 
 

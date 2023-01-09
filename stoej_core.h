@@ -15,9 +15,6 @@
 // defines a templated type FT that satisfies the std::floating_point<FT_> concept
 #define STOEJ_FT_ template<typename FT_> requires std::floating_point<FT_>
 
-// create a juce::Drawable from binary image data (SVG, etc...)
-#define STOEJ_DRAWABLE_IMG(s) (juce::Drawable::createFromImageData(s,s##Size))
-
 // boilerplate bitwise operator implementations for enums
 // (same as in winnt.h)
 #define DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE) \

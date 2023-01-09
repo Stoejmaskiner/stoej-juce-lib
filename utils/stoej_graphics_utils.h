@@ -10,8 +10,12 @@
 
 #pragma once
 #include "utils/stoej_math.h"
+#include "gui/stoej_Colours.h"
 
 // TODO: rename to gui utils, as "graphics" implies OpenGL
+
+// create a juce::Drawable from binary image data (SVG, etc...)
+#define STOEJ_DRAWABLE_IMG(s) (stoej::prepare_drawable(juce::Drawable::createFromImageData(s,s##Size)))
 
 namespace stoej {
 	constexpr double PT_2_PX = 1.333333;
@@ -90,5 +94,10 @@ namespace stoej {
             int(r.getHeight()));
     }
 
-
+    // TODO: janky workaround to there not being a "replace all colours" function in JUCE.
+    // it replaces common SVG colours with stoej::Colours::meta_unassigned
+    static std::unique_ptr<juce::Drawable> prepare_drawable(std::unique_ptr<juce::Drawable> drawable) {
+        drawable->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
+        return drawable;
+    }
 }
