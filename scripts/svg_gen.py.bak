@@ -1,84 +1,15 @@
 import xmltodict
 import os
 import glob
-#from svg.path import Path, Move, Line, Arc, CubicBezier, QuadraticBezier, Close, parse_path
+from svg.path import Path, Move, Line, Arc, CubicBezier, QuadraticBezier, Close, parse_path
 import inflection
 import numpy as np
 from dataclasses import dataclass
-from typing import Tuple, List
+from typing import Tuple
 
 # apologies for the unreadableness, I felt like golfing
 
 f32 = np.float32
-
-@dataclass
-class Shape:
-    stroke: bool
-    fill: bool
-    bounds: bool
-
-@dataclass
-class Line(Shape):
-    x1: float
-    y1: float
-    x2: float
-    y2: float
-
-@dataclass
-class Rect(Shape):
-    x: float
-    y: float
-    w: float
-    h: float
-
-@dataclass
-class Circle(Shape):
-    x: float
-    y: float
-    w: float
-
-@dataclass
-class Point:
-    x: float
-    y: float
-
-class Close:
-    pass
-
-@dataclass
-class CenteredArc:
-    cx: float
-    cy: float
-    rx: float
-    ry: float
-    rot: float
-    th1: float
-    th2: float
-
-@dataclass
-class CubicTo:
-    c1x: float
-    c1y: float
-    c2x: float
-    c2y: float
-    ex: float
-    ey: float
-
-class PolyLine:
-    stroke: bool
-    fill: bool
-    bounds: bool
-    start: Point
-    line_tos: List[Point]
-
-class Path:
-    stroke: bool
-    fill: bool
-    bounds: bool
-    start: Point
-    shape_tos: List[Point | CenteredArc | CubicTo]
-
-
 
 directory = os.path.join('..','assets')
 

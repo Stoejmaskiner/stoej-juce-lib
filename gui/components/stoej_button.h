@@ -17,6 +17,8 @@
 #include "gui/interfaces/stoej_tileable_component.h"
 #include "utils/stoej_graphics_utils.h"
 #include "stoej_component.h"
+#include "binary_data/stoej_Icon.h"
+#include "binary_data/stoej_Svgs.h"
 
 
 //==============================================================================
@@ -38,11 +40,11 @@ namespace stoej {
             : StoejButton(name, size, label_on, label_off, nullptr, nullptr, true, false) {}
 
         // simple button with icon, optionally toggleable
-        StoejButton(const juce::String name, ButtonSize size, const std::unique_ptr<juce::Drawable>& icon, bool toggleable = false)
+        StoejButton(const juce::String name, ButtonSize size, stoej::Icon* const icon, bool toggleable = false)
             : StoejButton(name, size, "", "", icon, icon, toggleable, true) {}
 
         // toggleable button with separate on and off icons
-        StoejButton(const juce::String name, ButtonSize size, const std::unique_ptr<juce::Drawable>& icon_on, const std::unique_ptr<juce::Drawable>& icon_off)
+        StoejButton(const juce::String name, ButtonSize size, stoej::Icon* const icon_on, stoej::Icon* const icon_off)
             : StoejButton(name, size, "", "", icon_on, icon_off, true, true) {}
         
         std::variant<float, DynamicSize2> getPreferredHeight() override;
@@ -64,8 +66,8 @@ namespace stoej {
             ButtonSize size,
             const juce::String label_on,
             const juce::String label_off,
-            const std::unique_ptr<juce::Drawable>& icon_on_,
-            const std::unique_ptr<juce::Drawable>& icon_off_,
+            stoej::Icon* const icon_on_,
+            stoej::Icon* const icon_off_,
             bool toggleable,
             bool use_icon);
 
@@ -80,8 +82,10 @@ namespace stoej {
         void paintIcon(juce::Graphics& g, bool pressed);
 
         ButtonSize btn_size_;
-        const std::unique_ptr<juce::Drawable>& icon_on_;
-        const std::unique_ptr<juce::Drawable>& icon_off_;
+        //const std::unique_ptr<juce::Drawable>& icon_on_;
+        //const std::unique_ptr<juce::Drawable>& icon_off_;
+        std::optional<stoej::Icon> icon_on_;
+        std::optional<stoej::Icon> icon_off_;
         const juce::String label_on_;
         const juce::String label_off_;
         bool use_icon_;
