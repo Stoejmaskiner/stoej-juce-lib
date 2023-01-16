@@ -48,6 +48,8 @@ namespace stoej {
         std::variant<float, DynamicSize2> getPreferredHeight() override;
         std::variant<float, DynamicSize2> getPreferredWidth() override;
         void resized() override;
+        void clicked() override;
+        void setClickAction(std::function<void()> fun) { this->on_click_fun_ = fun; }
         //void paint(juce::Graphics&) override {}
         
         //void setLabel(juce::String label);
@@ -86,6 +88,7 @@ namespace stoej {
         const juce::String label_off_;
         bool separate_on_off_looks_;
         bool use_icon_;
+        std::function<void()> on_click_fun_ = nullptr;
         //Box bounding_box_;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StoejButton)
