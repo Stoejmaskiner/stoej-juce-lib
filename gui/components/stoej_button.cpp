@@ -18,8 +18,8 @@ stoej::StoejButton::StoejButton(
 	ButtonSize size,
 	const juce::String label_on,
 	const juce::String label_off,
-	const std::unique_ptr<juce::Drawable>& icon_on,
-	const std::unique_ptr<juce::Drawable>& icon_off,
+	std::unique_ptr<juce::Drawable> icon_on,
+	std::unique_ptr<juce::Drawable> icon_off,
 	bool toggleable,
 	bool separate_on_off_looks,
 	bool use_icon)
@@ -28,8 +28,8 @@ stoej::StoejButton::StoejButton(
 	btn_size_(size),
 	label_on_(label_on),
 	label_off_(label_off),
-	icon_on_(icon_on),
-	icon_off_(icon_off),
+	icon_on_(std::move(icon_on)),
+	icon_off_(std::move(icon_off)),
 	separate_on_off_looks_(separate_on_off_looks),
 	use_icon_(use_icon)
 {
@@ -59,6 +59,21 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 		return { 60.0f };
 	default:
 		jassertfalse;
+	}
+}
+
+void stoej::StoejButton::resized()
+{
+	//DBG("Button resized: component_name=<" << this->getName() << ">");
+	auto r = this->getLocalFloatBounds();
+	r.reduce(3 * dp_, 3 * dp_);
+	if (this->icon_off_) {
+		auto r2 = r.toNearestInt();
+		this->icon_off_->setBounds(r2);
+	}
+	if (this->icon_on_) {
+		auto r1 = r.toNearestInt();
+		this->icon_on_->setBounds(juce::Rectangle(r1));
 	}
 }
 
@@ -117,13 +132,12 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 
 void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 {
-	auto r = this->getLocalFloatBounds();
+	
 	if (pressed) {
 		this->background_c_ = juce::Colours::black;
 		this->drawBackground(g);
 		g.setColour(juce::Colours::white);
-		r.reduce(3 * dp_, 3 * dp_);
-		this->icon_on_->setBounds(r.toNearestInt());
+		
 		// TODO: how to change the colour of this icon???
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
 	}
@@ -131,8 +145,6 @@ void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 		this->background_c_ = juce::Colours::white;
 		this->drawBackground(g);
 		g.setColour(juce::Colours::black);
-		r.reduce(3 * dp_, 3 * dp_);
-		this->icon_on_->setBounds(r.toNearestInt());
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
 	}
 	this->drawBorder(g);
@@ -140,8 +152,21 @@ void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 
 void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
 {
-	// TODO:
-	jassertfalse;
+	auto r = this->getLocalFloatBounds();
+	if (pressed) {
+		this->background_c_ = juce::Colours::black;
+		this->drawBackground(g);
+		g.setColour(juce::Colours::white);
+		// TODO: how to change the colour of this icon???
+		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+	}
+	else {
+		this->background_c_ = juce::Colours::white;
+		this->drawBackground(g);
+		g.setColour(juce::Colours::black);
+		this->icon_off_->drawWithin(g, this->icon_off_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+	}
+	this->drawBorder(g);
 }
 
 void stoej::StoejButton::paintOneLabel(juce::Graphics& g, bool pressed)

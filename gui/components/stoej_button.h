@@ -34,20 +34,20 @@ namespace stoej {
             : StoejButton(name, size, label, "", nullptr, nullptr, toggleable, false, false) {}
 
         // toggleable button with separate on and off labels
-        StoejButton(const juce::String name, ButtonSize size, const juce::String label_on, juce::String& label_off)
+        StoejButton(const juce::String name, ButtonSize size, const juce::String label_on, const juce::String label_off)
             : StoejButton(name, size, label_on, label_off, nullptr, nullptr, true, true, false) {}
 
         // simple button with icon, optionally toggleable
-        StoejButton(const juce::String name, ButtonSize size, const std::unique_ptr<juce::Drawable>& icon, bool toggleable = false)
-            : StoejButton(name, size, "", "", icon, nullptr, toggleable, false, true) {}
+        StoejButton(const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon, bool toggleable = false)
+            : StoejButton(name, size, "", "", std::move(icon), nullptr, toggleable, false, true) {}
 
         // toggleable button with separate on and off icons
-        StoejButton(const juce::String name, ButtonSize size, const std::unique_ptr<juce::Drawable>& icon_on, std::unique_ptr<juce::Drawable> icon_off)
-            : StoejButton(name, size, "", "", icon_on, icon_off, true, true, true) {}
+        StoejButton(const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon_on, std::unique_ptr<juce::Drawable> icon_off)
+            : StoejButton(name, size, "", "", std::move(icon_on), std::move(icon_off), true, true, true) {}
         
         std::variant<float, DynamicSize2> getPreferredHeight() override;
         std::variant<float, DynamicSize2> getPreferredWidth() override;
-        //void resized() override;
+        void resized() override;
         //void paint(juce::Graphics&) override {}
         
         //void setLabel(juce::String label);
@@ -63,8 +63,8 @@ namespace stoej {
             ButtonSize size,
             const juce::String label_on,
             const juce::String label_off,
-            const std::unique_ptr<juce::Drawable>& icon_on_,
-            const std::unique_ptr<juce::Drawable>& icon_off_,
+            std::unique_ptr<juce::Drawable> icon_on_,
+            std::unique_ptr<juce::Drawable> icon_off_,
             bool toggleable,
             bool separate_on_off_looks,
             bool use_icon);
@@ -80,8 +80,8 @@ namespace stoej {
 
 
         ButtonSize btn_size_;
-        const std::unique_ptr<juce::Drawable>& icon_on_;
-        const std::unique_ptr<juce::Drawable>& icon_off_;
+        std::unique_ptr<juce::Drawable> icon_on_;
+        std::unique_ptr<juce::Drawable> icon_off_;
         const juce::String label_on_;
         const juce::String label_off_;
         bool separate_on_off_looks_;
