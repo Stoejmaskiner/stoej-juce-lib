@@ -136,35 +136,35 @@ void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 	if (pressed) {
 		this->background_c_ = juce::Colours::black;
 		this->drawBackground(g);
-		g.setColour(juce::Colours::white);
-		
-		// TODO: how to change the colour of this icon???
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::white);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_on_->replaceColour(juce::Colours::white, stoej::Colours::meta_unassigned);
 	}
 	else {
 		this->background_c_ = juce::Colours::white;
 		this->drawBackground(g);
-		g.setColour(juce::Colours::black);
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::black);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_on_->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
 	}
 	this->drawBorder(g);
 }
 
 void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
 {
-	auto r = this->getLocalFloatBounds();
 	if (pressed) {
 		this->background_c_ = juce::Colours::black;
 		this->drawBackground(g);
-		g.setColour(juce::Colours::white);
-		// TODO: how to change the colour of this icon???
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::white);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_on_->replaceColour(juce::Colours::white, stoej::Colours::meta_unassigned);
 	}
 	else {
 		this->background_c_ = juce::Colours::white;
 		this->drawBackground(g);
-		g.setColour(juce::Colours::black);
+		this->icon_off_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::black);
 		this->icon_off_->drawWithin(g, this->icon_off_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_off_->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
 	}
 	this->drawBorder(g);
 }
