@@ -86,4 +86,11 @@ namespace stoej {
         }
     }
 
+    // reset an APVTS parameter
+    inline void apvts_reset_param(juce::AudioProcessorValueTreeState& apvts, juce::StringRef id) {
+        auto p = apvts.getParameter(id);
+        auto def = p->getDefaultValue();
+        p->setValueNotifyingHost(def);
+    }
+
 }
