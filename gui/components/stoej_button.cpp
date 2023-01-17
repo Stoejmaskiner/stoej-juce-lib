@@ -77,12 +77,6 @@ void stoej::StoejButton::resized()
 	}
 }
 
-void stoej::StoejButton::clicked()
-{
-	DBG("Button clicked: component_name=<" << this->getName() << ">");
-	if (this->on_click_fun_) this->on_click_fun_();
-}
-
 
 void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {

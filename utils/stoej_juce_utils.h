@@ -93,4 +93,14 @@ namespace stoej {
         p->setValueNotifyingHost(def);
     }
 
+    // randomize an APVTS parameter
+    inline void apvts_random_param(juce::AudioProcessorValueTreeState& apvts, juce::StringRef id) {
+        auto p = apvts.getParameter(id);
+        auto val = juce::Random::getSystemRandom().nextFloat();
+        p->setValueNotifyingHost(val);
+    }
+
+    // mutate an APVTS parameter
+    // TODO: inline void apvts_mutate_param()
+
 }

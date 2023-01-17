@@ -48,8 +48,12 @@ namespace stoej {
         std::variant<float, DynamicSize2> getPreferredHeight() override;
         std::variant<float, DynamicSize2> getPreferredWidth() override;
         void resized() override;
-        void clicked() override;
-        void setClickAction(std::function<void()> fun) { this->on_click_fun_ = fun; }
+        void clicked() override { DBG("stoej::StoejButton: clicked: component_name=<" << this->getName() << ">"); }
+        void buttonStateChanged() override { 
+            juce::String state = this->getToggleState() ? "true" : "false";
+            DBG("stoej::StoejButton: state changed: component_name=<" << this->getName() << ">, to_state=<" << state << ">"); 
+        }
+        //void setSimpleClickAction(std::function<void()> fun) { this->on_click_fun_ = fun; }
         //void paint(juce::Graphics&) override {}
         
         //void setLabel(juce::String label);
