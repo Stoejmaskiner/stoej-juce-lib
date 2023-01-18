@@ -89,53 +89,16 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 	else
 		if (this->use_icon_) this->paintOneIcon(g, pressed);
 		else this->paintOneLabel(g, pressed);
-	
-	/*
-	//this->setBorderWidth(1.0f);
-	//this->drawBorder(g);
-
-	//if (shouldDrawButtonAsDown) jassertfalse;
-	//if (shouldDrawButtonAsHighlighted) jassertfalse;
-
-	// toggle button drawing logic
-	if(this->isToggleable()) {
-		// TODO(Lorenzo): got here
-		if (this->getToggleState()) this->background_c_ = juce::Colours::black; //this->bounding_box_.fill_color = juce::Colours::black;
-		else this->background_c_ = juce::Colours::white;
-    // trigger button drawing logic 
-	} else {
-		//if (shouldDrawButtonAsDown) g.setColour(juce::Colours::red);
-		//if (!shouldDrawButtonAsDown) g.setColour(juce::Colours::black);
-		//g.drawRect(r);
-	}
-	this->drawBackground(g);
-
-
-	if (!this->use_icon_) {
-		if (this->getToggleState()) g.setColour(juce::Colours::white);
-		else g.setColour(juce::Colours::black);
-		g.setFont(stoej::get_font_archivo_narrow());
-		g.setFont(13.0 * dp_ * stoej::PT_2_PX);
-		g.drawText(this->label_on_, r, juce::Justification::centred);   // draw some placeholder text
-	}
-	else {
-		this->icon_on_->drawWithin(g, this->icon_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-	}
-
-	this->setBorderWidth(1.0f);
-	this->drawBorder(g);
-
-
-	
-	
-	*/
 }
 
 void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 {
+	// TODO: string arena for "use_dark_theme"
+	bool use_dark_theme = this->apvts_.state.getProperty("use_dark_theme", false);
 	
 	if (pressed) {
-		this->background_c_ = juce::Colours::black;
+		// TODO: string arena for "stoej_dark_theme...."
+		this->background_c_ = use_dark_theme ? stoej::fetch_theme_colour(this->apvts_, "stoej_dark_theme_foreground_primary") : stoej::fetch_theme_colour(this->apvts_, "stoej_light_theme_foreground_primary");
 		this->drawBackground(g);
 		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::white);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);

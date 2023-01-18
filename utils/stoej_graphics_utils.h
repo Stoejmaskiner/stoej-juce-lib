@@ -126,4 +126,9 @@ namespace stoej {
         theme.setProperty("stoej_dark_theme_fill_secondary",        juce::int64(0xffffffff), nullptr);
         theme.setProperty("stoej_dark_theme_scope_background",      juce::int64(0xff101010), nullptr);
     }
+
+    inline juce::Colour fetch_theme_colour(juce::AudioProcessorValueTreeState& apvts, const juce::Identifier id) {
+        // TODO: sanity checks?
+        return juce::Colour(juce::int32(apvts.state.getProperty(id)));
+    }
 }
