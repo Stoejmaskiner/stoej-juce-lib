@@ -14,6 +14,7 @@
 
 
 stoej::StoejButton::StoejButton(
+	juce::AudioProcessorValueTreeState& apvts,
 	const juce::String name,
 	ButtonSize size,
 	const juce::String label_on,
@@ -24,7 +25,7 @@ stoej::StoejButton::StoejButton(
 	bool separate_on_off_looks,
 	bool use_icon)
 	:
-	stoej::FloatComponent<juce::Button>(name),
+	stoej::FloatComponent<juce::Button>(apvts, name),
 	btn_size_(size),
 	label_on_(label_on),
 	label_off_(label_off),

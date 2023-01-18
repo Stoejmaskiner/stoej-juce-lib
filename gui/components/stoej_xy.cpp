@@ -10,7 +10,8 @@
 
 #include "stoej_xy.h"
 
-stoej::XY::XY()
+stoej::XY::XY(juce::AudioProcessorValueTreeState& apvts)
+    : stoej::FloatComponent<juce::Component>(apvts)
 {
     this->x_.addListener(this);
     this->y_.addListener(this);

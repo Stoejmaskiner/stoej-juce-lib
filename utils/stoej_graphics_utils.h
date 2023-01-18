@@ -77,6 +77,7 @@ namespace stoej {
         g.drawRoundedRectangle(r, 0.0f, thickness);
     }
 
+    [[deprecated("use juce::Rectangle.toFloat() instead")]]
     inline juce::Rectangle<float> int_rect_2_float_rect(juce::Rectangle<int> r) {
         return juce::Rectangle<float>(
             float(r.getTopLeft().getX()),
@@ -85,7 +86,7 @@ namespace stoej {
             float(r.getHeight()));
     }
 
-    [[deprecated("TODO: undeprecate this when you have fixed all the janky places where you used this as a crutch")]]
+    [[deprecated("use juce::Rectangle.toInt() instead")]]
     inline juce::Rectangle<int> float_rect_2_int_rect(juce::Rectangle<float> r) {
         return juce::Rectangle<int>(
             int(r.getTopLeft().getX()),
@@ -99,5 +100,30 @@ namespace stoej {
     static std::unique_ptr<juce::Drawable> prepare_drawable(std::unique_ptr<juce::Drawable> drawable) {
         drawable->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
         return drawable;
+    }
+
+    // return default theme. Note that you will likely want to 
+    // override some of the colors for each plugin you make
+    // note that components assume the name of the theme property
+    // to be `stoej_theme`
+    inline void load_default_theme(juce::ValueTree& theme) {
+        theme.setProperty("stoej_light_theme_text_primary",         juce::int64(0xff000000), nullptr);
+        theme.setProperty("stoej_light_theme_text_inverted",        juce::int64(0xfffefefe), nullptr);
+        theme.setProperty("stoej_light_theme_text_secondary",       juce::int64(0xff7f7f7f), nullptr);
+        theme.setProperty("stoej_light_theme_foreground_primary",   juce::int64(0xff000000), nullptr);
+        theme.setProperty("stoej_light_theme_background_primary",   juce::int64(0xfffefefe), nullptr);
+        theme.setProperty("stoej_light_theme_background_secondary", juce::int64(0xffeeeeee), nullptr);
+        theme.setProperty("stoej_light_theme_fill_primary",         juce::int64(0xffff20a0), nullptr);
+        theme.setProperty("stoej_light_theme_fill_secondary",       juce::int64(0xffaaaaaa), nullptr);
+        theme.setProperty("stoej_light_theme_scope_background",     juce::int64(0xff202020), nullptr);
+        theme.setProperty("stoej_dark_theme_text_primary",          juce::int64(0xffffffff), nullptr);
+        theme.setProperty("stoej_dark_theme_text_inverted",         juce::int64(0xff303030), nullptr);
+        theme.setProperty("stoej_dark_theme_text_secondary",        juce::int64(0xff7f7f7f), nullptr);
+        theme.setProperty("stoej_dark_theme_foreground_primary",    juce::int64(0xffffffff), nullptr);
+        theme.setProperty("stoej_dark_theme_background_primary",    juce::int64(0xff303030), nullptr);
+        theme.setProperty("stoej_dark_theme_background_secondary",  juce::int64(0xff101010), nullptr);
+        theme.setProperty("stoej_dark_theme_fill_primary",          juce::int64(0xffff20a0), nullptr);
+        theme.setProperty("stoej_dark_theme_fill_secondary",        juce::int64(0xffffffff), nullptr);
+        theme.setProperty("stoej_dark_theme_scope_background",      juce::int64(0xff101010), nullptr);
     }
 }

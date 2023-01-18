@@ -12,8 +12,8 @@
 
 // TODO: should scroll on long text, like -you know- a ticker
 
-stoej::Ticker::Ticker(const juce::String& component_name) :
-    stoej::FloatComponent<juce::Label>(component_name) 
+stoej::Ticker::Ticker(juce::AudioProcessorValueTreeState& apvts, const juce::String& component_name) :
+    stoej::FloatComponent<juce::Label>(apvts, component_name) 
 {
     this->setBorderWidth(1.0);
 }

@@ -66,6 +66,7 @@ protected:
 	juce::Colour border_c_ = juce::Colours::black;
 	juce::Colour background_c_ = juce::Colours::white;
 	EnabledBorders enabled_borders_ = EnabledBorders::all;
+	juce::AudioProcessorValueTreeState& apvts_;
 
 	// draw the integer bounds
 	void dbgDrawIntBounds(juce::Graphics &g) {
@@ -204,8 +205,8 @@ protected:
 	}
 
 public:
-	FloatComponent(const juce::String& component_name) : JuceComponent(component_name) {}
-	FloatComponent() : JuceComponent() {}
+	FloatComponent(juce::AudioProcessorValueTreeState& apvts, const juce::String& component_name) : apvts_(apvts), JuceComponent(component_name) {}
+	FloatComponent(juce::AudioProcessorValueTreeState& apvts) : apvts_(apvts), JuceComponent() {}
 	// used to signal to parent how to decide size for this component
 	// in .setBounds(). Exact value represents unscaled size. The size
 	// of the component with an exact size preference will still be

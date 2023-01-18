@@ -9,8 +9,8 @@
 */
 
 #include "stoej_value.h"
-stoej::Value::Value(const juce::String& component_name, const char* label, ValueUnit unit) :
-    stoej::FloatComponent<juce::Slider>(component_name), label_(label), unit_(unit)
+stoej::Value::Value(juce::AudioProcessorValueTreeState& apvts, const juce::String& component_name, const char* label, ValueUnit unit) :
+    stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     this->setBorderWidth(1.0f);
