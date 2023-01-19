@@ -102,33 +102,5 @@ namespace stoej {
         return drawable;
     }
 
-    // return default theme. Note that you will likely want to 
-    // override some of the colors for each plugin you make
-    // note that components assume the name of the theme property
-    // to be `stoej_theme`
-    inline void load_default_theme(juce::ValueTree& theme) {
-        theme.setProperty("stoej_light_theme_text_primary",         juce::int64(0xff000000), nullptr);
-        theme.setProperty("stoej_light_theme_text_inverted",        juce::int64(0xfffefefe), nullptr);
-        theme.setProperty("stoej_light_theme_text_secondary",       juce::int64(0xff7f7f7f), nullptr);
-        theme.setProperty("stoej_light_theme_foreground_primary",   juce::int64(0xff000000), nullptr);
-        theme.setProperty("stoej_light_theme_background_primary",   juce::int64(0xfffefefe), nullptr);
-        theme.setProperty("stoej_light_theme_background_secondary", juce::int64(0xffeeeeee), nullptr);
-        theme.setProperty("stoej_light_theme_fill_primary",         juce::int64(0xffff20a0), nullptr);
-        theme.setProperty("stoej_light_theme_fill_secondary",       juce::int64(0xffaaaaaa), nullptr);
-        theme.setProperty("stoej_light_theme_scope_background",     juce::int64(0xff202020), nullptr);
-        theme.setProperty("stoej_dark_theme_text_primary",          juce::int64(0xffffffff), nullptr);
-        theme.setProperty("stoej_dark_theme_text_inverted",         juce::int64(0xff303030), nullptr);
-        theme.setProperty("stoej_dark_theme_text_secondary",        juce::int64(0xff7f7f7f), nullptr);
-        theme.setProperty("stoej_dark_theme_foreground_primary",    juce::int64(0xffffffff), nullptr);
-        theme.setProperty("stoej_dark_theme_background_primary",    juce::int64(0xff303030), nullptr);
-        theme.setProperty("stoej_dark_theme_background_secondary",  juce::int64(0xff101010), nullptr);
-        theme.setProperty("stoej_dark_theme_fill_primary",          juce::int64(0xffff20a0), nullptr);
-        theme.setProperty("stoej_dark_theme_fill_secondary",        juce::int64(0xffffffff), nullptr);
-        theme.setProperty("stoej_dark_theme_scope_background",      juce::int64(0xff101010), nullptr);
-    }
-
-    inline juce::Colour fetch_theme_colour(juce::AudioProcessorValueTreeState& apvts, const juce::Identifier id) {
-        // TODO: sanity checks?
-        return juce::Colour(juce::int32(apvts.state.getProperty(id)));
-    }
+    
 }

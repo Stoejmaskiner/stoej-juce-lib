@@ -11,6 +11,7 @@
 #include "stoej_button.h"
 
 #include "binary_data/stoej_Fonts.h"
+#include "gui/stoej_Theming.h"
 
 
 stoej::StoejButton::StoejButton(
