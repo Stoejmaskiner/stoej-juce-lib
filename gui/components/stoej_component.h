@@ -12,6 +12,7 @@
 #include <variant>
 #include <JuceHeader.h>
 #include <stoej_core.h>
+#include "stoej_APVTS.h"
 
 constexpr float X_NUDGE = 0.5f;
 constexpr float Y_NUDGE = 0.5f;

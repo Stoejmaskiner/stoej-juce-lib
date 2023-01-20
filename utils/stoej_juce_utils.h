@@ -11,9 +11,11 @@
 #pragma once
 #include <JuceHeader.h>
 #include <concepts>
+#include "stoej_params.h"
 
 namespace stoej {
 
+    // TODO: move params to stoej_params.h
 
     struct BoolParamInfo {
         const char* id;
@@ -56,7 +58,7 @@ namespace stoej {
 
     /// convert juce::AudioBuffer to juce::dsp::ProcessContextReplacing
     /// to reduce boilerplate
-    [[deprecate("buggy, use snippet instead")]]
+    [[deprecated("buggy, use snippet instead")]]
     inline juce::dsp::ProcessContextReplacing<float> buff_to_context (juce::AudioBuffer<float> &buff)
     {
         auto block = juce::dsp::AudioBlock<float>(buff);
@@ -85,6 +87,8 @@ namespace stoej {
             dst.copyFrom(c, 0, src, c, 0, src_size);
         }
     }
+
+    // TODO: these should be part of a custom apvts class
 
     // reset an APVTS parameter
     inline void apvts_reset_param(juce::AudioProcessorValueTreeState& apvts, juce::StringRef id) {

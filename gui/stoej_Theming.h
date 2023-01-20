@@ -48,6 +48,7 @@ namespace stoej {
     // override some of the colors for each plugin you make
     // note that components assume the name of the theme property
     // to be `stoej_theme`
+    [[deprecated("use stoej::APVTS instead")]]
     inline void load_default_theme(juce::ValueTree& theme) {
         STOEJ_SET_THEME_COLOR_(theme, theme_colours::light_theme::text_primary);
         STOEJ_SET_THEME_COLOR_(theme, theme_colours::light_theme::text_inverted);
@@ -70,6 +71,7 @@ namespace stoej {
         STOEJ_SET_THEME_COLOR_(theme, theme_colours::dark_theme::scope_background);
     }
 
+    [[deprecated("use stoej::APVTS instead")]]
     inline juce::Colour fetch_theme_colour(juce::AudioProcessorValueTreeState& apvts, const juce::Identifier id) {
         // TODO: sanity checks?
         return juce::Colour(juce::int32(apvts.state.getProperty(id)));
