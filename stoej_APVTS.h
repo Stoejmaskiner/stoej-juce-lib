@@ -14,10 +14,16 @@
 #include "stoej_params.h"
 #include "gui/stoej_Theming.h"
 
+// TODO: hide this implementation in a cpp file
 #define STOEJ_SET_THEME_COLOR_(vt, name) \
 vt.setProperty(name::id, name::default_value, nullptr);
 
 namespace stoej {
+
+    // an extension to juce::AudioProcessorValueTreeState that defines some default parameters
+    // and attributes used in stoej components.
+    // It is optional to use it, but if these values aren't defined, components will fall back
+    // to hard-coded values.
     class APVTS : public juce::AudioProcessorValueTreeState {
     public:
         APVTS(
@@ -31,9 +37,8 @@ namespace stoej {
             processorToConnectTo,
             undoManagerToUse,
             valueTreeType,
-            std::move(parameterLayout)
+            std::move(this->create_default_layout_helper(std::move(parameterLayout)))
         ) {
-            this->createAndAddParameter(UniqueParamBool(parameters::internal_use_dark_theme));
 
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::text_primary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::text_inverted);
@@ -53,6 +58,12 @@ namespace stoej {
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_primary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_secondary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::scope_background);
+        }
+
+    private:
+        static ParameterLayout create_default_layout_helper(ParameterLayout layout) {
+            layout.add(create_unique_param_bool(parameters::internal_use_dark_theme));
+            return layout;
         }
     };
 }
