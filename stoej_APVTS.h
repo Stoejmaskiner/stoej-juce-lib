@@ -14,6 +14,7 @@
 #include "stoej_params.h"
 #include "gui/stoej_Theming.h"
 #include "utils/stoej_cpp_utils.h"
+#include "stoej_properties.h"
 
 // TODO: hide this implementation in a cpp file
 #define STOEJ_SET_THEME_COLOR_(vt, name) \
@@ -59,6 +60,8 @@ namespace stoej {
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_primary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_secondary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::scope_background);
+
+            this->state.setProperty(properties::internal_gui_scale.id, properties::internal_gui_scale.init, nullptr);
         }
 
         float getParameterFloatOr(juce::StringRef id, float default_value) {
