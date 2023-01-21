@@ -13,10 +13,11 @@
 #include <JuceHeader.h>
 #include "stoej_params.h"
 #include "gui/stoej_Theming.h"
+#include "utils/stoej_cpp_utils.h"
 
 // TODO: hide this implementation in a cpp file
 #define STOEJ_SET_THEME_COLOR_(vt, name) \
-vt.setProperty(name::id, name::default_value, nullptr);
+vt.setProperty(name.id, name.default_value, nullptr);
 
 namespace stoej {
 
@@ -58,6 +59,21 @@ namespace stoej {
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_primary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_secondary);
             STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::scope_background);
+        }
+
+        float getParameterFloatOr(juce::StringRef id, float default_value) {
+            auto maybe_val = this->getRawParameterValue(id);
+            return maybe_val ? float(*maybe_val) : default_value;
+        }
+
+        bool getParameterBoolOr(juce::StringRef id, bool default_value) {
+            auto maybe_val = this->getRawParameterValue(id);
+            return maybe_val ? (*maybe_val >= 0.5f) : default_value;
+        }
+
+        juce::Colour getPropertyColourOr(const stoej::ThemeColorInfo& info) {
+            juce::int64 maybe_val = this->state.getProperty(info.id);
+            return juce::Colour(maybe_val ? maybe_val : info.default_value);
         }
 
     private:

@@ -10,7 +10,7 @@
 
 #include "stoej_Slider.h"
 
-stoej::StoejSlider::StoejSlider(juce::AudioProcessorValueTreeState& apvts, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
+stoej::StoejSlider::StoejSlider(stoej::APVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
     stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), is_inverted_(is_inverted), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::LinearVertical);

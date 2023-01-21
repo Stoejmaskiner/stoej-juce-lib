@@ -30,19 +30,19 @@ namespace stoej {
         enum ButtonSize {tiny, small, medium, large};
 
         // simple button with text label, optionally toggleable
-        StoejButton(juce::AudioProcessorValueTreeState& apvts, const juce::String name, ButtonSize size, const juce::String label, bool toggleable = false)
+        StoejButton(stoej::APVTS& apvts, const juce::String name, ButtonSize size, const juce::String label, bool toggleable = false)
             : StoejButton(apvts, name, size, label, "", nullptr, nullptr, toggleable, false, false) {}
 
         // toggleable button with separate on and off labels
-        StoejButton(juce::AudioProcessorValueTreeState& apvts, const juce::String name, ButtonSize size, const juce::String label_on, const juce::String label_off)
+        StoejButton(stoej::APVTS& apvts, const juce::String name, ButtonSize size, const juce::String label_on, const juce::String label_off)
             : StoejButton(apvts, name, size, label_on, label_off, nullptr, nullptr, true, true, false) {}
 
         // simple button with icon, optionally toggleable
-        StoejButton(juce::AudioProcessorValueTreeState& apvts, const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon, bool toggleable = false)
+        StoejButton(stoej::APVTS& apvts, const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon, bool toggleable = false)
             : StoejButton(apvts, name, size, "", "", std::move(icon), nullptr, toggleable, false, true) {}
 
         // toggleable button with separate on and off icons
-        StoejButton(juce::AudioProcessorValueTreeState& apvts, const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon_on, std::unique_ptr<juce::Drawable> icon_off)
+        StoejButton(stoej::APVTS& apvts, const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon_on, std::unique_ptr<juce::Drawable> icon_off)
             : StoejButton(apvts, name, size, "", "", std::move(icon_on), std::move(icon_off), true, true, true) {}
         
         std::variant<float, DynamicSize2> getPreferredHeight() override;
@@ -65,7 +65,7 @@ namespace stoej {
 
         // fat constructor
         StoejButton(
-            juce::AudioProcessorValueTreeState& apvts,
+            stoej::APVTS& apvts,
             const juce::String name,
             ButtonSize size,
             const juce::String label_on,

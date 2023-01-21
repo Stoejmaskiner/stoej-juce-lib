@@ -9,7 +9,7 @@
 */
 
 #include "stoej_value.h"
-stoej::Value::Value(juce::AudioProcessorValueTreeState& apvts, const juce::String& component_name, const char* label, ValueUnit unit) :
+stoej::Value::Value(stoej::APVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit) :
     stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -76,6 +76,7 @@ void stoej::Value::paint(juce::Graphics& g)
         g.drawText(stoej::format_float_no_unit(v), r2, juce::Justification::centred);
     }
 
-    this->drawBorder(g);
+    // TODO:
+    this->drawBorder(g, 1.f, juce::Colours::black);
 
 }

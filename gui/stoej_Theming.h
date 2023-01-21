@@ -12,16 +12,23 @@
 #include <JuceHeader.h>
 
 #define STOEJ_DEF_THEME_COLOR_(subtheme, name, col) \
-namespace subtheme::name { \
-    inline juce::Identifier id = "stoej_" #subtheme "_" #name; \
-    inline juce::int64 default_value = col; \
+namespace subtheme { \
+    inline const stoej::ThemeColorInfo name = { \
+        "stoej_" #subtheme "_" #name, \
+        col \
+    }; \
 }
 
 #define STOEJ_SET_THEME_COLOR_(vt, name) \
-vt.setProperty(name::id, name::default_value, nullptr);
+vt.setProperty(name.id, name.default_value, nullptr);
 
 
 namespace stoej {
+    struct ThemeColorInfo {
+        juce::Identifier id;
+        juce::int64 default_value;
+    };
+
     namespace theme_colours {
         STOEJ_DEF_THEME_COLOR_(light_theme, text_primary, 0xff000000);
         STOEJ_DEF_THEME_COLOR_(light_theme, text_inverted, 0xfffefefe);

@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include <stoej_core.h>
 #include "stoej_APVTS.h"
+#include "stoej_params.h"
 
 constexpr float X_NUDGE = 0.5f;
 constexpr float Y_NUDGE = 0.5f;
@@ -63,11 +64,17 @@ class FloatComponent : public JuceComponent {
 protected:
 	juce::Rectangle<float> floatBounds_;
 	float dp_ = 1.0f;
+
+	[[deprecated("unused")]]
 	float border_w_ = 0.0f;
+
+	[[deprecated("unused")]]
 	juce::Colour border_c_ = juce::Colours::black;
+
+	[[deprecated("unused")]]
 	juce::Colour background_c_ = juce::Colours::white;
 	EnabledBorders enabled_borders_ = EnabledBorders::all;
-	juce::AudioProcessorValueTreeState& apvts_;
+	stoej::APVTS& apvts_;
 
 	// draw the integer bounds
 	void dbgDrawIntBounds(juce::Graphics &g) {
@@ -88,22 +95,22 @@ protected:
 	}
 
 	// draw an outline around the component
-	void drawBorder(juce::Graphics& g) {
+	void drawBorder(juce::Graphics& g, float w, juce::Colour c) {
 			
 		// early return if no borders need to be drawn
 		if (this->enabled_borders_ == EnabledBorders::none) return;
 
-		jassert(this->border_w_ >= 0.0f);
+		jassert(w >= 0.0f);
 
 		// TODO: tune threshold size to minimum visible on black background
-		if (this->border_w_ <= 0.05f) return;
+		if (w <= 0.05f) return;
 
 		auto r = this->getLocalFloatBounds();
 		auto tl = r.getTopLeft();
 		auto br = r.getBottomRight();
 		auto tr = r.getTopRight();
 		auto bl = r.getBottomLeft();
-		g.setColour(this->border_c_);
+		g.setColour(c);
 
 		juce::Path p;
 
@@ -193,21 +200,21 @@ protected:
 			jassertfalse;
 		}
 
-		g.strokePath(p, juce::PathStrokeType(this->border_w_ * dp_, juce::PathStrokeType::JointStyle::mitered));
+		g.strokePath(p, juce::PathStrokeType(w * dp_, juce::PathStrokeType::JointStyle::mitered));
 
 		//this->dbgDrawIntBounds(g);
 		//this->dbgDrawFloatBounds(g);
 	}
 	
-	void drawBackground(juce::Graphics& g) {
+	void drawBackground(juce::Graphics& g, juce::Colour c) {
 		auto r = this->getLocalFloatBounds();
-		g.setColour(this->background_c_);
+		g.setColour(c);
 		g.fillRect(r);
 	}
 
 public:
-	FloatComponent(juce::AudioProcessorValueTreeState& apvts, const juce::String& component_name) : apvts_(apvts), JuceComponent(component_name) {}
-	FloatComponent(juce::AudioProcessorValueTreeState& apvts) : apvts_(apvts), JuceComponent() {}
+	FloatComponent(stoej::APVTS& apvts, const juce::String& component_name) : apvts_(apvts), JuceComponent(component_name) {}
+	FloatComponent(stoej::APVTS& apvts) : apvts_(apvts), JuceComponent() {}
 	// used to signal to parent how to decide size for this component
 	// in .setBounds(). Exact value represents unscaled size. The size
 	// of the component with an exact size preference will still be
@@ -245,8 +252,10 @@ public:
 	virtual void setDP(float dp) { this->dp_ = dp; }
 
 	//TODO: implement rest of the box model?
+	[[deprecated("unused")]]
 	void setBorderWidth(float w) { this->border_w_ = w; }
 
+	[[deprecated("unused")]]
 	void setBorderColor(juce::Colour c) { this->border_c_ = c; }
 
 	void setFloatBounds(juce::Point<float> top_left, juce::Point<float> bottom_right) {
