@@ -32,31 +32,44 @@ void stoej::Value::resized()
 
 void stoej::Value::paint(juce::Graphics& g)
 {
+    using namespace stoej::theme_colours;
+    bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
     auto r = this->getLocalFloatBounds();
     //this->drawBorder(g);
     //this->dbgDrawFloatBounds(g);
     //this->dbgDrawIntBounds(g);
-    g.setColour(this->background_c_);
-    g.fillRect(r);
+    auto bg_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
+        this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+    this->drawBackground(g, bg_c);
     auto r1 = r.removeFromTop(18.f * dp_);
     auto r2 = r.removeFromTop(18.f * dp_);
     auto r3 = juce::Rectangle(r);
     //this->drawBackground(g);
     //this->drawBorder(g);
 
-    
-    // FIXME: this is a workaround for the fact that the lerp is overshooting a bit, you should investigate
-    //auto v = stoej::clamp(this->getValue(), 0.005, 0.995);
     auto v = this->getValue();
     auto p = this->valueToProportionOfLength(v);
     r3.removeFromRight(r3.getWidth() * (1. - p));
-    g.setColour(juce::Colours::grey);
+
+    auto fill_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::fill_secondary) :
+        this->apvts_.getPropertyThemeColor(light_theme::fill_secondary);
+    g.setColour(fill_c);
     g.fillRect(r3);
-    g.setColour(this->border_c_);
+
+    auto border_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+        this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+    g.setColour(border_c);
     g.drawLine(juce::Line(r3.getTopRight(), r3.getBottomRight()), 1.0f * dp_);
-    g.setColour(this->border_c_);
+    //g.setColour(this->border_c_);
     stoej::draw_rect_f(g, r, 1.0f * dp_);
     
+    auto txt_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
+        this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+    g.setColour(txt_c);
     g.setFont(get_font_archivo_narrow());
     g.setFont(12.f * dp_ * stoej::PT_2_PX);
     g.drawText(this->label_, r1, juce::Justification::centred);
@@ -76,7 +89,6 @@ void stoej::Value::paint(juce::Graphics& g)
         g.drawText(stoej::format_float_no_unit(v), r2, juce::Justification::centred);
     }
 
-    // TODO:
-    this->drawBorder(g, 1.f, juce::Colours::black);
+    this->drawBorder(g, 1.f, border_c);
 
 }

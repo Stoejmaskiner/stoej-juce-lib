@@ -71,7 +71,7 @@ namespace stoej {
             return maybe_val ? (*maybe_val >= 0.5f) : default_value;
         }
 
-        juce::Colour getPropertyColourOr(const stoej::ThemeColorInfo& info) {
+        juce::Colour getPropertyThemeColor(const stoej::ThemeColorInfo& info) {
             juce::int64 maybe_val = this->state.getProperty(info.id);
             return juce::Colour(maybe_val ? maybe_val : info.default_value);
         }

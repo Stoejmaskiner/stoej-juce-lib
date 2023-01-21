@@ -77,6 +77,10 @@ namespace stoej {
         g.drawRoundedRectangle(r, 0.0f, thickness);
     }
 
+    inline void fill_rect_f(juce::Graphics& g, juce::Rectangle<float> r) {
+        g.fillRoundedRectangle(r, 0.0f);
+    }
+
     [[deprecated("use juce::Rectangle.toFloat() instead")]]
     inline juce::Rectangle<float> int_rect_2_float_rect(juce::Rectangle<int> r) {
         return juce::Rectangle<float>(

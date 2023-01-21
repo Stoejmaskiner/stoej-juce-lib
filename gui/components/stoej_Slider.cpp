@@ -37,6 +37,9 @@ void stoej::StoejSlider::resized()
 
 void stoej::StoejSlider::paint(juce::Graphics& g)
 {
+    using namespace stoej::theme_colours;
+    bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
+
     auto r = this->getLocalFloatBounds();
     auto r1 = r.removeFromTop(18.f * dp_);
     auto r2 = r.removeFromTop(18.f * dp_);
@@ -46,20 +49,33 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     //this->drawBackground(g);
     //this->drawBorder(g);
     
-    g.setColour(this->background_c_);
-    g.fillRect(r);
-    // FIXME: this is a workaround for the fact that the lerp is overshooting a bit, you should investigate
-    //auto v = stoej::clamp(this->getValue(), 0.005, 0.995);
+    // TODO: macro this, it's reused a lot. Call it something like "STOEJ_GET_THEME_COLOR_WITH_MODE_APPLIED"
+    auto bg_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
+        this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+    this->drawBackground(g, bg_c);
+    //g.setColour(bg);
+    //g.fillRect(r);
+
     auto v = this->getValue();
     auto p = this->valueToProportionOfLength(v);
     if(this->is_inverted_) r3.removeFromBottom(r3.getHeight() * p);
     else r3.removeFromTop(r3.getHeight() * (1. - p));
-    g.setColour(juce::Colours::grey);
+    auto fill_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::fill_secondary) :
+        this->apvts_.getPropertyThemeColor(light_theme::fill_secondary);
+    g.setColour(fill_c);
     g.fillRect(r3);
-    g.setColour(this->border_c_);
+    auto border_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+        this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+    g.setColour(border_c);
     if(this->is_inverted_) g.drawLine(juce::Line(r3.getBottomLeft(), r3.getBottomRight()), 1.0f * dp_);
     else g.drawLine(juce::Line(r3.getTopLeft(), r3.getTopRight()), 1.0f * dp_);
-    g.setColour(this->border_c_);
+    auto txt_c = use_dark_theme ?
+        this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
+        this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+    g.setColour(txt_c);
     stoej::draw_rect_f(g, r, 1.0f * dp_);
     g.setFont(get_font_archivo_narrow());
     g.setFont(12.f * dp_ * stoej::PT_2_PX);

@@ -94,61 +94,114 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 
 void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 {
-	auto maybe_val = this->apvts_.getRawParameterValue(stoej::parameters::internal_use_dark_theme.id);
-	bool use_dark_theme = maybe_val ? (*maybe_val >= 0.5f) : false;
+	using namespace stoej::theme_colours;
+	bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
 	
 	if (pressed) {
-		auto background_c_ = use_dark_theme ? this->apvts_.getPropertyColourOr(stoej::theme_colours::dark_theme::foreground_primary) : this->apvts_.getPropertyColourOr(stoej::theme_colours::light_theme::foreground_primary);
-		this->drawBackground(g, background_c_);
-		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::white);
+		auto bg_c = use_dark_theme ? 
+			this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) : 
+			this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+		auto ico_c = use_dark_theme ? 
+			this->apvts_.getPropertyThemeColor(dark_theme::text_inverted) : 
+			this->apvts_.getPropertyThemeColor(light_theme::text_inverted);
+		this->drawBackground(g, bg_c);
+
+		// TODO: wrap in a stoej_Drawable?
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_on_->replaceColour(juce::Colours::white, stoej::Colours::meta_unassigned);
+		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
 	else {
-		// TODO:
-		this->drawBackground(g, juce::Colours::white);
-		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::black);
+		auto bg_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+		auto ico_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+
+		// TODO: copy-pasted code
+		this->drawBackground(g, bg_c);
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_on_->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
+		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
-	// TODO:
-	this->drawBorder(g, 1.f, juce::Colours::black);
+
+	auto border_c = use_dark_theme ?
+		this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+		this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+	this->drawBorder(g, 1.f, border_c);
 }
 
 void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
 {
+	using namespace stoej::theme_colours;
+	bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
+
 	if (pressed) {
-		// TODO:
-		this->drawBackground(g, juce::Colours::black);
-		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::white);
+		auto bg_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+		auto ico_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::text_inverted) :
+			this->apvts_.getPropertyThemeColor(light_theme::text_inverted);
+		this->drawBackground(g, bg_c);
+
+		// TODO: wrap in a stoej_Drawable?
+		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
 		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_on_->replaceColour(juce::Colours::white, stoej::Colours::meta_unassigned);
+		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
 	else {
-		// TODO:
-		this->drawBackground(g, juce::Colours::white);
-		this->icon_off_->replaceColour(stoej::Colours::meta_unassigned, juce::Colours::black);
-		this->icon_off_->drawWithin(g, this->icon_off_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_off_->replaceColour(juce::Colours::black, stoej::Colours::meta_unassigned);
+		auto bg_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+		auto ico_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+
+		// TODO: copy-pasted code
+		this->drawBackground(g, bg_c);
+		this->icon_off_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
+		this->icon_off_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+		this->icon_off_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
-	// TODO:
-	this->drawBorder(g, 1.f, juce::Colours::black);
+
+	auto border_c = use_dark_theme ?
+		this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+		this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+	this->drawBorder(g, 1.f, border_c);
 }
 
 void stoej::StoejButton::paintOneLabel(juce::Graphics& g, bool pressed)
 {
+	using namespace stoej::theme_colours;
+	bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
+
 	if (pressed) {
-		// TODO:
-		this->drawBackground(g, juce::Colours::black);
-		this->paintLabel(g, this->label_on_, juce::Colours::white);
+		auto bg_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+		auto txt_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::text_inverted) :
+			this->apvts_.getPropertyThemeColor(light_theme::text_inverted);
+		this->drawBackground(g, bg_c);
+		this->paintLabel(g, this->label_on_, txt_c);
 	}
 	else {
-		// TODO:
-		this->drawBackground(g, juce::Colours::white);
-		this->paintLabel(g, this->label_on_, juce::Colours::black);
+		auto bg_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+		auto txt_c = use_dark_theme ?
+			this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
+			this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+		this->drawBackground(g, bg_c);
+		this->paintLabel(g, this->label_on_, txt_c);
 	}
-	// TODO:
-	this->drawBorder(g, 1.f, juce::Colours::black);
+	
+	auto border_c = use_dark_theme ?
+		this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
+		this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+	this->drawBorder(g, 1.f, border_c);
 }
 
 void stoej::StoejButton::paintTwoLabels(juce::Graphics& g, bool pressed)
