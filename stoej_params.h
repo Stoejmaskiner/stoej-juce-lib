@@ -51,8 +51,16 @@ namespace stoej {
     }
 }
 
-namespace stoej::parameters {
-    inline constexpr BoolParamInfo internal_use_dark_theme{ "Y0mDh-wQe8r6rXT6bA_QD", "{internal - use dark theme}", false };
+namespace stoej {
+    namespace strings {
+        namespace internal_params {
+            inline const std::string use_dark_theme = "internal_params::use_dark_theme";
+        }
+    }
+
+    inline const std::map<std::string, BoolParamInfo> bool_params = {
+        {strings::internal_params::use_dark_theme, { "Y0mDh-wQe8r6rXT6bA_QD", "{internal - use dark theme}", false }}
+    };
     
     // instructions:
     // to add a new parameter you need:
