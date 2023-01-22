@@ -2,6 +2,13 @@
 
 [TOC]
 
+## Development environment
+
+## Dependencies
+
+- gcem 1.16.x
+- JUCE 6.x.x
+
 ## Architecture
 
 ### Modules
@@ -82,7 +89,7 @@ TODO
 
 TODO
 
-## Design
+## Software design
 
 ### GUI component design
 
