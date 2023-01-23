@@ -24,11 +24,9 @@ namespace stoej {
 
     // an extension to juce::AudioProcessorValueTreeState that defines some default parameters
     // and attributes used in stoej components.
-    // It is optional to use it, but if these values aren't defined, components will fall back
-    // to hard-coded values.
-    class APVTS : public juce::AudioProcessorValueTreeState {
+    class ThemedAPVTS : public juce::AudioProcessorValueTreeState {
     public:
-        APVTS(
+        ThemedAPVTS(
             juce::AudioProcessor& processorToConnectTo, 
             juce::UndoManager* undoManagerToUse, 
             const juce::Identifier& valueTreeType, 
@@ -41,27 +39,14 @@ namespace stoej {
             valueTreeType,
             std::move(this->create_default_layout_helper(std::move(parameterLayout)))
         ) {
-
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::text_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::text_inverted);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::text_secondary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::foreground_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::background_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::background_secondary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::fill_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::fill_secondary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::light_theme::scope_background);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::text_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::text_inverted);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::text_secondary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::foreground_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::background_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::background_secondary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_primary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::fill_secondary);
-            STOEJ_SET_THEME_COLOR_(this->state, theme_colours::dark_theme::scope_background);
-
-            this->state.setProperty(properties::internal_gui_scale.id, properties::internal_gui_scale.init, nullptr);
+            auto theme_state = this->state.getOrCreateChildWithName(strings::apvts_children::theme_state, nullptr);
+            for (auto const& [_, val] : stoej::theme_colors) {
+                theme_state.setProperty(val.id, val.init, nullptr);
+            }
+            auto internal_properties_state = this->state.getOrCreateChildWithName(strings::apvts_children::internal_properties_state, nullptr);
+            for (auto const& [_, val] : stoej::properties) {
+                internal_properties_state.setProperty(val.id, val.init, nullptr);
+            }
         }
 
         float getParameterFloatOr(juce::StringRef id, float default_value) {
@@ -74,14 +59,19 @@ namespace stoej {
             return maybe_val ? (*maybe_val >= 0.5f) : default_value;
         }
 
-        juce::Colour getPropertyThemeColor(const stoej::ThemeColorInfo& info) {
+        juce::Colour getPropertyThemeColor(const stoej::PropertyInfo& info) {
             juce::int64 maybe_val = this->state.getProperty(info.id);
-            return juce::Colour(maybe_val ? maybe_val : info.default_value);
+            return juce::Colour(maybe_val ? maybe_val : juce::int64(info.init));
         }
 
     private:
         static ParameterLayout create_default_layout_helper(ParameterLayout layout) {
-            layout.add(create_unique_param_bool(parameters::internal_use_dark_theme));
+            for (auto const& [_, val] : stoej::bool_params) {
+                layout.add(create_unique_param_bool(val));
+            }
+            //for (auto const& [_, val] : stoej::float_params) {
+            //
+            //}
             return layout;
         }
     };

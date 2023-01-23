@@ -11,17 +11,21 @@
 #pragma once
 
 namespace stoej {
-    struct BoolPropertyInfo {
-        const char* id;
-        const bool init;
+    struct PropertyInfo {
+        const juce::Identifier id;
+        const juce::var init;
     };
 
-    struct FloatPropertyInfo {
-        const char* id;
-        const float init;
-    };
-
-    namespace properties {
-        inline constexpr FloatPropertyInfo internal_gui_scale{ "KGGH2Gr4vaxucb-TWmNFk", 1.5f };
+    namespace strings {
+        namespace apvts_children {
+            inline const juce::Identifier internal_properties_state = "bd5BVCqWx1qzHkHbnEGf0";
+        }
+        namespace internal_properties {
+            inline const std::string gui_scale = "internal_properties::gui_scale";
+        }
     }
+
+    inline const std::map<std::string, PropertyInfo> properties = {
+        { strings::internal_properties::gui_scale, { "Y0mDh-wQe8r6rXT6bA_QD", 2.0f }}
+    };
 }

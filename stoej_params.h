@@ -53,6 +53,9 @@ namespace stoej {
 
 namespace stoej {
     namespace strings {
+        namespace apvts_children {
+            inline const juce::Identifier internal_params_state = "kxkpqeZH8Nt3qKgwdvrRp";
+        }
         namespace internal_params {
             inline const std::string use_dark_theme = "internal_params::use_dark_theme";
         }
