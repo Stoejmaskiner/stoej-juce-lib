@@ -61,6 +61,7 @@ namespace stoej {
         }
     }
 
+    // TODO: can probably remove a layer of indirection in some places if you reuse the string as the id, same with properties
     inline const std::map<std::string, BoolParamInfo> bool_params = {
         {strings::internal_params::use_dark_theme, { "Y0mDh-wQe8r6rXT6bA_QD", "{internal - use dark theme}", false }}
     };
@@ -68,6 +69,6 @@ namespace stoej {
     // instructions:
     // to add a new parameter you need:
     // - a unique identifier, which must start with `internal_`
-    // - a unique NanoID, which the APVTS uses internally, also DAWS sometimes
+    // - a unique NanoID, which the APVTS uses internally, also DAWS sometimes. Note that it must start with a letter (discard NanoIDs that don't)
     // - a unique name string (which DAWs use) in the format `{internal - some name}`
 }

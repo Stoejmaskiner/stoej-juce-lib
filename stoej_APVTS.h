@@ -71,8 +71,10 @@ namespace stoej {
         }
 
         juce::Colour getPropertyThemeColor(const stoej::PropertyInfo& info) {
-            juce::int64 maybe_val = this->state.getProperty(info.id);
-            return juce::Colour(maybe_val ? maybe_val : juce::int64(info.init));
+            auto theme_state = this->state.getChildWithName(strings::apvts_children::theme_state);
+            juce::int64 maybe_val = theme_state.getProperty(info.id);
+            //return juce::Colour(maybe_val ? maybe_val : juce::int64(info.init));
+            return juce::Colour(maybe_val);
         }
 
         // TODO: man, these method names suck

@@ -74,7 +74,7 @@ protected:
 	[[deprecated("unused")]]
 	juce::Colour background_c_ = juce::Colours::white;
 	EnabledBorders enabled_borders_ = EnabledBorders::all;
-	stoej::APVTS& apvts_;
+	stoej::ThemedAPVTS& apvts_;
 
 	// draw the integer bounds
 	void dbgDrawIntBounds(juce::Graphics &g) {
@@ -213,8 +213,8 @@ protected:
 	}
 
 public:
-	FloatComponent(stoej::APVTS& apvts, const juce::String& component_name) : apvts_(apvts), JuceComponent(component_name) {}
-	FloatComponent(stoej::APVTS& apvts) : apvts_(apvts), JuceComponent() {}
+	FloatComponent(stoej::ThemedAPVTS& apvts, const juce::String& component_name) : apvts_(apvts), JuceComponent(component_name) {}
+	FloatComponent(stoej::ThemedAPVTS& apvts) : apvts_(apvts), JuceComponent() {}
 	// used to signal to parent how to decide size for this component
 	// in .setBounds(). Exact value represents unscaled size. The size
 	// of the component with an exact size preference will still be
