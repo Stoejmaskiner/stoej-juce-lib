@@ -15,7 +15,7 @@
 
 
 stoej::StoejButton::StoejButton(
-	stoej::APVTS& apvts,
+	stoej::ThemedAPVTS& apvts,
 	const juce::String name,
 	ButtonSize size,
 	const juce::String label_on,
@@ -94,16 +94,10 @@ void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsH
 
 void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 {
-	using namespace stoej::theme_colours;
-	bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
 	
 	if (pressed) {
-		auto bg_c = use_dark_theme ? 
-			this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) : 
-			this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
-		auto ico_c = use_dark_theme ? 
-			this->apvts_.getPropertyThemeColor(dark_theme::text_inverted) : 
-			this->apvts_.getPropertyThemeColor(light_theme::text_inverted);
+		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_inverted);
 		this->drawBackground(g, bg_c);
 
 		// TODO: wrap in a stoej_Drawable?
@@ -112,12 +106,8 @@ void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
 	else {
-		auto bg_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::background_primary);
-		auto ico_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
+		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
 
 		// TODO: copy-pasted code
 		this->drawBackground(g, bg_c);
@@ -126,24 +116,16 @@ void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
 
-	auto border_c = use_dark_theme ?
-		this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-		this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
 	this->drawBorder(g, 1.f, border_c);
 }
 
 void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
 {
-	using namespace stoej::theme_colours;
-	bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
 
 	if (pressed) {
-		auto bg_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
-		auto ico_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::text_inverted) :
-			this->apvts_.getPropertyThemeColor(light_theme::text_inverted);
+		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_inverted);
 		this->drawBackground(g, bg_c);
 
 		// TODO: wrap in a stoej_Drawable?
@@ -152,12 +134,9 @@ void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
 		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
 	else {
-		auto bg_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::background_primary);
-		auto ico_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+
+		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
+		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
 
 		// TODO: copy-pasted code
 		this->drawBackground(g, bg_c);
@@ -166,41 +145,28 @@ void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
 		this->icon_off_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
 	}
 
-	auto border_c = use_dark_theme ?
-		this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-		this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
 	this->drawBorder(g, 1.f, border_c);
 }
 
 void stoej::StoejButton::paintOneLabel(juce::Graphics& g, bool pressed)
 {
-	using namespace stoej::theme_colours;
-	bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
+
 
 	if (pressed) {
-		auto bg_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
-		auto txt_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::text_inverted) :
-			this->apvts_.getPropertyThemeColor(light_theme::text_inverted);
+		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+		auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_inverted);
 		this->drawBackground(g, bg_c);
 		this->paintLabel(g, this->label_on_, txt_c);
 	}
 	else {
-		auto bg_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::background_primary);
-		auto txt_c = use_dark_theme ?
-			this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
-			this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
+		auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
 		this->drawBackground(g, bg_c);
 		this->paintLabel(g, this->label_on_, txt_c);
 	}
 	
-	auto border_c = use_dark_theme ?
-		this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-		this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
 	this->drawBorder(g, 1.f, border_c);
 }
 

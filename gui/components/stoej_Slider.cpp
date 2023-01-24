@@ -10,7 +10,7 @@
 
 #include "stoej_Slider.h"
 
-stoej::StoejSlider::StoejSlider(stoej::APVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
+stoej::StoejSlider::StoejSlider(stoej::ThemedAPVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
     stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), is_inverted_(is_inverted), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
@@ -37,9 +37,6 @@ void stoej::StoejSlider::resized()
 
 void stoej::StoejSlider::paint(juce::Graphics& g)
 {
-    using namespace stoej::theme_colours;
-    bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
-
     auto r = this->getLocalFloatBounds();
     auto r1 = r.removeFromTop(18.f * dp_);
     auto r2 = r.removeFromTop(18.f * dp_);
@@ -50,9 +47,7 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     //this->drawBorder(g);
     
     // TODO: macro this, it's reused a lot. Call it something like "STOEJ_GET_THEME_COLOR_WITH_MODE_APPLIED"
-    auto bg_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
-        this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+    auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
     this->drawBackground(g, bg_c);
     //g.setColour(bg);
     //g.fillRect(r);
@@ -61,20 +56,14 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     auto p = this->valueToProportionOfLength(v);
     if(this->is_inverted_) r3.removeFromBottom(r3.getHeight() * p);
     else r3.removeFromTop(r3.getHeight() * (1. - p));
-    auto fill_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::fill_secondary) :
-        this->apvts_.getPropertyThemeColor(light_theme::fill_secondary);
+    auto fill_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::fill_secondary);
     g.setColour(fill_c);
     g.fillRect(r3);
-    auto border_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-        this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+    auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
     g.setColour(border_c);
     if(this->is_inverted_) g.drawLine(juce::Line(r3.getBottomLeft(), r3.getBottomRight()), 1.0f * dp_);
     else g.drawLine(juce::Line(r3.getTopLeft(), r3.getTopRight()), 1.0f * dp_);
-    auto txt_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
-        this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+    auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
     g.setColour(txt_c);
     stoej::draw_rect_f(g, r, 1.0f * dp_);
     g.setFont(get_font_archivo_narrow());

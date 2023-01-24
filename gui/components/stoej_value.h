@@ -23,7 +23,7 @@ namespace stoej {
         // enum SliderSize {};
         //enum SliderDirection { vertical, horizontal };
 
-        Value(stoej::APVTS&, const juce::String& component_name, const char* label, ValueUnit unit);
+        Value(stoej::ThemedAPVTS&, const juce::String& component_name, const char* label, ValueUnit unit);
         std::variant<float, DynamicSize2> getPreferredHeight() override { return { 48.0f }; }
         std::variant<float, DynamicSize2> getPreferredWidth() override { return { 48.0f }; }
         void resized() override;

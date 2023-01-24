@@ -9,7 +9,7 @@
 */
 
 #include "stoej_value.h"
-stoej::Value::Value(stoej::APVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit) :
+stoej::Value::Value(stoej::ThemedAPVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit) :
     stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -32,15 +32,12 @@ void stoej::Value::resized()
 
 void stoej::Value::paint(juce::Graphics& g)
 {
-    using namespace stoej::theme_colours;
-    bool use_dark_theme = this->apvts_.getParameterBoolOr(stoej::parameters::internal_use_dark_theme.id, false);
+    
     auto r = this->getLocalFloatBounds();
     //this->drawBorder(g);
     //this->dbgDrawFloatBounds(g);
     //this->dbgDrawIntBounds(g);
-    auto bg_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::background_primary) :
-        this->apvts_.getPropertyThemeColor(light_theme::background_primary);
+    auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
     this->drawBackground(g, bg_c);
     auto r1 = r.removeFromTop(18.f * dp_);
     auto r2 = r.removeFromTop(18.f * dp_);
@@ -52,23 +49,17 @@ void stoej::Value::paint(juce::Graphics& g)
     auto p = this->valueToProportionOfLength(v);
     r3.removeFromRight(r3.getWidth() * (1. - p));
 
-    auto fill_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::fill_secondary) :
-        this->apvts_.getPropertyThemeColor(light_theme::fill_secondary);
+    auto fill_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::fill_secondary);
     g.setColour(fill_c);
     g.fillRect(r3);
 
-    auto border_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::foreground_primary) :
-        this->apvts_.getPropertyThemeColor(light_theme::foreground_primary);
+    auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
     g.setColour(border_c);
     g.drawLine(juce::Line(r3.getTopRight(), r3.getBottomRight()), 1.0f * dp_);
     //g.setColour(this->border_c_);
     stoej::draw_rect_f(g, r, 1.0f * dp_);
     
-    auto txt_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(dark_theme::text_primary) :
-        this->apvts_.getPropertyThemeColor(light_theme::text_primary);
+    auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
     g.setColour(txt_c);
     g.setFont(get_font_archivo_narrow());
     g.setFont(12.f * dp_ * stoej::PT_2_PX);

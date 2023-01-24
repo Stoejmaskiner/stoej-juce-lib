@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "stoej_properties.h"
+#
 
 namespace stoej {
 
@@ -30,6 +31,7 @@ namespace stoej {
             inline const std::string scope_background = "scope_background";
         }
         namespace light_theme {
+            inline const std::string root_ = "light_theme";
             inline const std::string text_primary = "light_theme::text_primary";
             inline const std::string text_inverted = "light_theme::text_inverted";
             inline const std::string text_secondary = "light_theme::text_secondary";
@@ -41,6 +43,7 @@ namespace stoej {
             inline const std::string scope_background = "light_theme::scope_background";
         }
         namespace dark_theme {
+            inline const std::string root_ = "dark_theme";
             inline const std::string text_primary = "dark_theme::text_primary";
             inline const std::string text_inverted = "dark_theme::text_inverted";
             inline const std::string text_secondary = "dark_theme::text_secondary";

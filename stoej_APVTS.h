@@ -54,14 +54,39 @@ namespace stoej {
             return maybe_val ? float(*maybe_val) : default_value;
         }
 
+        [[deprecated("use getParameterBool")]]
         bool getParameterBoolOr(juce::StringRef id, bool default_value) {
             auto maybe_val = this->getRawParameterValue(id);
             return maybe_val ? (*maybe_val >= 0.5f) : default_value;
         }
 
+        bool getParameterBool(BoolParamInfo info) {
+            auto maybe_val = this->getRawParameterValue(info.id);
+            return maybe_val ? (*maybe_val >= 0.5f) : info.init;
+        }
+
+        bool getParameterBool(const std::string& id) {
+            auto info = bool_params.at(id);
+            return this->getParameterBool(info);
+        }
+
         juce::Colour getPropertyThemeColor(const stoej::PropertyInfo& info) {
             juce::int64 maybe_val = this->state.getProperty(info.id);
             return juce::Colour(maybe_val ? maybe_val : juce::int64(info.init));
+        }
+
+        // TODO: man, these method names suck
+        juce::Colour getPropertyThemeColor(const std::string& id) {
+            auto info = stoej::theme_colors.at(id);
+            return getPropertyThemeColor(info);
+        }
+
+        // TODO: sucky method names, should suggest the light/dark genericity
+        juce::Colour getGenericThemeColorWithModeApplied(const std::string& id) {
+            bool use_dark_theme = this->getParameterBool(strings::internal_params::use_dark_theme);
+            return use_dark_theme ?
+                this->getPropertyThemeColor(stoej::strings::dark_theme::root_ + "::" + id) :
+                this->getPropertyThemeColor(stoej::strings::light_theme::root_ + "::" + id);
         }
 
     private:
