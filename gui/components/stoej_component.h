@@ -14,6 +14,7 @@
 #include <stoej_core.h>
 #include "stoej_APVTS.h"
 #include "stoej_params.h"
+#include "gui/stoej_Theming.h"
 
 constexpr float X_NUDGE = 0.5f;
 constexpr float Y_NUDGE = 0.5f;
@@ -74,7 +75,8 @@ protected:
 	[[deprecated("unused")]]
 	juce::Colour background_c_ = juce::Colours::white;
 	EnabledBorders enabled_borders_ = EnabledBorders::all;
-	stoej::ThemedAPVTS& apvts_;
+	stoej::APVTS& apvts_;
+	stoej::ThemeManager& theme_manager_;
 
 	// draw the integer bounds
 	void dbgDrawIntBounds(juce::Graphics &g) {
