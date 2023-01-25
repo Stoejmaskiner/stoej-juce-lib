@@ -11,72 +11,114 @@
 #pragma once
 #include <JuceHeader.h>
 #include "stoej_properties.h"
-#
 
 namespace stoej {
 
-    namespace strings {
-        namespace apvts_children {
-            inline const juce::Identifier theme_state = "RzDsV3vGl740yjedVHVbL";
-        }
-        namespace generic_theme {
-            inline const std::string text_primary = "text_primary";
-            inline const std::string text_inverted = "text_inverted";
-            inline const std::string text_secondary = "text_secondary";
-            inline const std::string foreground_primary = "foreground_primary";
-            inline const std::string background_primary = "background_primary";
-            inline const std::string background_secondary = "background_secondary";
-            inline const std::string fill_primary = "fill_primary";
-            inline const std::string fill_secondary = "fill_secondary";
-            inline const std::string scope_background = "scope_background";
-        }
-        namespace light_theme {
-            inline const std::string root_ = "light_theme";
-            inline const std::string text_primary = "light_theme::text_primary";
-            inline const std::string text_inverted = "light_theme::text_inverted";
-            inline const std::string text_secondary = "light_theme::text_secondary";
-            inline const std::string foreground_primary = "light_theme::foreground_primary";
-            inline const std::string background_primary = "light_theme::background_primary";
-            inline const std::string background_secondary = "light_theme::background_secondary";
-            inline const std::string fill_primary = "light_theme::fill_primary";
-            inline const std::string fill_secondary = "light_theme::fill_secondary";
-            inline const std::string scope_background = "light_theme::scope_background";
-        }
-        namespace dark_theme {
-            inline const std::string root_ = "dark_theme";
-            inline const std::string text_primary = "dark_theme::text_primary";
-            inline const std::string text_inverted = "dark_theme::text_inverted";
-            inline const std::string text_secondary = "dark_theme::text_secondary";
-            inline const std::string foreground_primary = "dark_theme::foreground_primary";
-            inline const std::string background_primary = "dark_theme::background_primary";
-            inline const std::string background_secondary = "dark_theme::background_secondary";
-            inline const std::string fill_primary = "dark_theme::fill_primary";
-            inline const std::string fill_secondary = "dark_theme::fill_secondary";
-            inline const std::string scope_background = "dark_theme::scope_background";
-        }
-    }
+    // a Meyers singleton storing the currently loaded theme
+    // TODO: is this thread safe?
+    class ThemeManager {
+    public:
+        enum ThemeColorNames {
+            text_primary,
+            text_inverted,
+            text_secondary,
+            foreground_primary,
+            background_primary,
+            background_secondary,
+            fill_primary,
+            fill_secondary,
+            scope_background,
+        };
+        using ThemeColors = std::map<ThemeColorNames, juce::Colour>;
 
-    inline const std::map<std::string, PropertyInfo> theme_colors = {
-        { strings::light_theme::text_primary, PropertyInfo{ "Y_3ptt8Et7GXmARtiiXB6", juce::int64(0xff000000) }},
-        { strings::light_theme::text_inverted, PropertyInfo{ "q_COlB0lzveY-M9S2vcck", juce::int64(0xfffefefe) }},
-        { strings::light_theme::text_secondary, PropertyInfo{ "TJZVz-GRjVUx8ZWoW36mE", juce::int64(0xff7f7f7f) }},
-        { strings::light_theme::foreground_primary, PropertyInfo{ "DQkYk6Vuz8EYELi6XIm4b", juce::int64(0xff000000) }},
-        { strings::light_theme::background_primary, PropertyInfo{ "v0hoiXWttL6eJlpsHFww_", juce::int64(0xfffefefe) }},
-        { strings::light_theme::background_secondary, PropertyInfo{ "rO8XcbAgrCHl7baYCvdmu", juce::int64(0xffeeeeee) }},
-        { strings::light_theme::fill_primary, PropertyInfo{ "X2_F8AVNRzO2721rV44fb", juce::int64(0xffff20a0) }},
-        { strings::light_theme::fill_secondary, PropertyInfo{ "nfUivuxUGxDRx_vc04oew", juce::int64(0xffaaaaaa) }},
-        { strings::light_theme::scope_background, PropertyInfo{ "w_WKjo46xZvA-mPcPm90Z", juce::int64(0xff202020) }},
-        { strings::dark_theme::text_primary, PropertyInfo{ "AZjsucEdNeEw9neWv1t2c", juce::int64(0xffffffff) }},
-        { strings::dark_theme::text_inverted, PropertyInfo{ "SlmHE5LSepv0h-HhzKuft", juce::int64(0xff303030) }},
-        { strings::dark_theme::text_secondary, PropertyInfo{ "ct3I6t3EAU8dJMtxqqDP2", juce::int64(0xff7f7f7f) }},
-        { strings::dark_theme::foreground_primary, PropertyInfo{ "DdRqcbIFafDIBCP_ma6c_", juce::int64(0xffffffff) }},
-        { strings::dark_theme::background_primary, PropertyInfo{ "OdgJeF_uB2zHPlqdrkgfl", juce::int64(0xff303030) }},
-        { strings::dark_theme::background_secondary, PropertyInfo{ "QkUz78qVwi4uFGb9Di2pq", juce::int64(0xff101010) }},
-        { strings::dark_theme::fill_primary, PropertyInfo{ "cbYGd90mz7VDPDFrvrhNO", juce::int64(0xffff20a0) }},
-        { strings::dark_theme::fill_secondary, PropertyInfo{ "z8pGjSib18wnnFB3StNUY", juce::int64(0xffffffff) }},
-        { strings::dark_theme::scope_background, PropertyInfo{ "Rdr_s0jc3OEgDSxpS8eLM",juce::int64( 0xff101010) }}
-    };
+        inline static const ThemeColors default_dark_theme = {
+            {text_primary,juce::Colour(0xffffffff)},
+            {text_inverted,juce::Colour(0xff303030)},
+            {text_secondary,juce::Colour(0xff7f7f7f)},
+            {foreground_primary,juce::Colour(0xffffffff)},
+            {background_primary,juce::Colour(0xff303030)},
+            {background_secondary,juce::Colour(0xff101010)},
+            {fill_primary,juce::Colour(0xffff20a0)},
+            {fill_secondary,juce::Colour(0xffffffff)},
+            {scope_background,juce::Colour(0xfff10101)},
+        };
+        inline static const ThemeColors default_light_theme = {
+            {text_primary,juce::Colour(0xff000000)},
+            {text_inverted,juce::Colour(0xfffefefe)},
+            {text_secondary,juce::Colour(0xff7f7f7f)},
+            {foreground_primary,juce::Colour(0xff000000)},
+            {background_primary,juce::Colour(0xfffefefe)},
+            {background_secondary,juce::Colour(0xffeeeeee)},
+            {fill_primary,juce::Colour(0xffff20a0)},
+            {fill_secondary,juce::Colour(0xffaaaaaa)},
+            {scope_background,juce::Colour(0xff202020)},
+        };
+
+        static ThemeManager& instance() {
+            static ThemeManager instance;
+            return instance;
+        }
+
+        // return an atomic reference to the theme
+        std::atomic<ThemeColors>& getActiveTheme(bool use_dark_theme) {
+            if (use_dark_theme) return dark_theme;
+            else return light_theme;
+        }
+
+        // return a copy of the current active theme
+        ThemeColors getRawActiveTheme(bool use_dark_theme) {
+            if (use_dark_theme) return dark_theme.load();
+            else return light_theme.load();
+        }
+
+        // sets the current active theme
+        void setActiveTheme(ThemeColors new_theme, bool use_dark_theme) {
+            if (use_dark_theme) dark_theme.store(new_theme);
+            else light_theme.store(new_theme);
+        }
+
+        juce::Colour getDarkThemeColor(ThemeColorNames name) {
+            return dark_theme.load()[name];
+        }
+
+        juce::Colour getLightThemeColor(ThemeColorNames name) {
+            return light_theme.load()[name];
+        }
+
+        juce::Colour getThemeColor(ThemeColorNames name, bool use_dark_theme) {
+            if (use_dark_theme) return this->getDarkThemeColor(name);
+            else return this->getLightThemeColor(name);
+        }
+
+        void setDarkThemeColor(ThemeColorNames name, juce::Colour color) {
+            // this is a bit inefficient, but the alternative is mutexes and those are hard to pass around
+            auto cur_theme = dark_theme.load();
+            cur_theme[name] = color;
+            dark_theme.store(cur_theme);
+        }
+
+        void setLightThemeColor(ThemeColorNames name, juce::Colour color) {
+            // this is a bit inefficient, but the alternative is mutexes and those are hard to pass around
+            auto cur_theme = light_theme.load();
+            cur_theme[name] = color;
+            light_theme.store(cur_theme);
+        }
+
+        void setThemeColor(ThemeColorNames name, bool use_dark_theme, juce::Colour color) {
+            if (use_dark_theme) this->setDarkThemeColor(name, color);
+            else this->setLightThemeColor(name, color);
+        }
+
+    protected:
+        std::atomic<ThemeColors> dark_theme;
+        std::atomic<ThemeColors> light_theme;
+
+    private:
+        ThemeManager() : dark_theme(default_dark_theme), light_theme(default_light_theme) {
+            DBG("Singleton \"ThemeManager\" was created!");
+        }
+        ~ThemeManager() = default;
+
+        JUCE_DECLARE_NON_COPYABLE(ThemeManager)
+    }; 
 }
-
-#undef STOEJ_DEF_THEME_COLOR_
-#undef STOEJ_SET_THEME_COLOR_
