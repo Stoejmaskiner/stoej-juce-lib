@@ -15,7 +15,6 @@
 namespace stoej {
 
     // a Meyers singleton storing the currently loaded theme
-    // TODO: is this thread safe?
     class ThemeManager {
     public:
         enum ThemeColorNames {
@@ -53,11 +52,6 @@ namespace stoej {
             {fill_secondary,juce::Colour(0xffaaaaaa)},
             {scope_background,juce::Colour(0xff202020)},
         };
-
-        static ThemeManager& instance() {
-            static ThemeManager instance;
-            return instance;
-        }
 
         // return an atomic reference to the theme
         std::atomic<ThemeColors>& getActiveTheme(bool use_dark_theme) {
@@ -109,15 +103,12 @@ namespace stoej {
             else this->setLightThemeColor(name, color);
         }
 
+        ThemeManager() : dark_theme(default_dark_theme), light_theme(default_light_theme) {}
+        ~ThemeManager() = default;
+
     protected:
         std::atomic<ThemeColors> dark_theme;
         std::atomic<ThemeColors> light_theme;
-
-    private:
-        ThemeManager() : dark_theme(default_dark_theme), light_theme(default_light_theme) {
-            DBG("Singleton \"ThemeManager\" was created!");
-        }
-        ~ThemeManager() = default;
 
         JUCE_DECLARE_NON_COPYABLE(ThemeManager)
     }; 

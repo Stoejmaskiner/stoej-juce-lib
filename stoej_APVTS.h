@@ -43,7 +43,7 @@ namespace stoej {
             for (auto const& [_, val] : stoej::theme_colors) {
                 theme_state.setProperty(val.id, val.init, nullptr);
             }
-            auto internal_properties_state = this->state.getOrCreateChildWithName(strings::apvts_children::internal_properties_state, nullptr);
+            
             for (auto const& [_, val] : stoej::properties) {
                 internal_properties_state.setProperty(val.id, val.init, nullptr);
             }
