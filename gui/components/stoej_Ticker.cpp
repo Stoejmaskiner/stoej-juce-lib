@@ -12,8 +12,8 @@
 
 // TODO: should scroll on long text, like -you know- a ticker
 
-stoej::Ticker::Ticker(stoej::ThemedAPVTS& apvts, const juce::String& component_name) :
-    stoej::FloatComponent<juce::Label>(apvts, component_name) 
+stoej::Ticker::Ticker(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name) :
+    stoej::FloatComponent<juce::Label>(apvts, theme_manager, component_name) 
 {
     //this->setBorderWidth(1.0);
 }
@@ -34,13 +34,13 @@ void stoej::Ticker::mouseExit(const juce::MouseEvent& event)
 void stoej::Ticker::paint(juce::Graphics& g)
 {
 
-    bool use_dark_theme = this->apvts_.getParameterBool(strings::internal_params::use_dark_theme);
+    bool use_dark_theme = this->theme_manager_.getUseDarkMode();
 
-    auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::scope_background);
+    auto bg_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::scope_background);
     auto txt_c = use_dark_theme ?
-        this->apvts_.getPropertyThemeColor(strings::dark_theme::text_primary) :
-        this->apvts_.getPropertyThemeColor(strings::light_theme::text_inverted);
-    auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+        this->theme_manager_.getDarkThemeColor(stoej::ThemeManager::text_primary) :
+        this->theme_manager_.getLightThemeColor(stoej::ThemeManager::text_inverted);
+    auto border_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::foreground_primary);
 
     this->drawBackground(g, bg_c);
 

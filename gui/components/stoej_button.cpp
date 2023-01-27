@@ -12,10 +12,12 @@
 
 #include "binary_data/stoej_Fonts.h"
 #include "gui/stoej_Theming.h"
+#include "stoej_APVTS.h"
 
 
 stoej::StoejButton::StoejButton(
-	stoej::ThemedAPVTS& apvts,
+	stoej::APVTS& apvts,
+	stoej::ThemeManager& theme_manager,
 	const juce::String name,
 	ButtonSize size,
 	const juce::String label_on,
@@ -26,7 +28,7 @@ stoej::StoejButton::StoejButton(
 	bool separate_on_off_looks,
 	bool use_icon)
 	:
-	stoej::FloatComponent<juce::Button>(apvts, name),
+	stoej::FloatComponent<juce::Button>(apvts, theme_manager, name),
 	btn_size_(size),
 	label_on_(label_on),
 	label_off_(label_off),
@@ -42,10 +44,13 @@ stoej::StoejButton::StoejButton(
 }
 
 
+
 std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredHeight()
 {
     return { 24.f };
 }
+
+
 
 std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 {
@@ -64,6 +69,8 @@ std::variant<float, stoej::DynamicSize2> stoej::StoejButton::getPreferredWidth()
 	}
 }
 
+
+
 void stoej::StoejButton::resized()
 {
 	//DBG("Button resized: component_name=<" << this->getName() << ">");
@@ -80,115 +87,45 @@ void stoej::StoejButton::resized()
 }
 
 
+
 void stoej::StoejButton::paintButton(juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
 	bool pressed = this->isToggleable() && this->getToggleState() || !this->isToggleable() && shouldDrawButtonAsDown;
 
-	if (this->separate_on_off_looks_)
-		if (this->use_icon_) this->paintTwoIcons(g, pressed);
-		else this->paintTwoLabels(g, pressed);
+	juce::Colour bg_c = pressed ?
+		this->theme_manager_.getThemeColor(stoej::ThemeManager::foreground_primary) :
+		this->theme_manager_.getThemeColor(stoej::ThemeManager::background_primary);
+	juce::Colour txt_c = pressed ?
+		this->theme_manager_.getThemeColor(stoej::ThemeManager::text_inverted) :
+		this->theme_manager_.getThemeColor(stoej::ThemeManager::text_primary);
+	auto border_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::foreground_primary);
+
+	this->drawBackground(g, bg_c);
+	if (this->use_icon_)
+		if (pressed || !this->separate_on_off_looks_)
+			this->paintIcon(g, this->icon_on_.get(), txt_c);
+		else this->paintIcon(g, this->icon_off_.get(), txt_c);
 	else
-		if (this->use_icon_) this->paintOneIcon(g, pressed);
-		else this->paintOneLabel(g, pressed);
-}
-
-void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
-{
-	
-	if (pressed) {
-		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
-		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_inverted);
-		this->drawBackground(g, bg_c);
-
-		// TODO: wrap in a stoej_Drawable?
-		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
-		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
-	}
-	else {
-		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
-		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
-
-		// TODO: copy-pasted code
-		this->drawBackground(g, bg_c);
-		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
-		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
-	}
-
-	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+		if (pressed || !this->separate_on_off_looks_)
+			this->paintLabel(g, this->label_on_, txt_c);
+		else this->paintLabel(g, this->label_off_, txt_c);
 	this->drawBorder(g, 1.f, border_c);
 }
 
-void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
-{
 
-	if (pressed) {
-		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
-		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_inverted);
-		this->drawBackground(g, bg_c);
 
-		// TODO: wrap in a stoej_Drawable?
-		this->icon_on_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
-		this->icon_on_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_on_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
-	}
-	else {
-
-		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
-		auto ico_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
-
-		// TODO: copy-pasted code
-		this->drawBackground(g, bg_c);
-		this->icon_off_->replaceColour(stoej::Colours::meta_unassigned, ico_c);
-		this->icon_off_->drawWithin(g, this->icon_on_->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
-		this->icon_off_->replaceColour(ico_c, stoej::Colours::meta_unassigned);
-	}
-
-	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
-	this->drawBorder(g, 1.f, border_c);
+void stoej::StoejButton::paintIcon(juce::Graphics& g, juce::Drawable* icon, juce::Colour color) {
+	icon->replaceColour(stoej::Colours::meta_unassigned, color);
+	icon->drawWithin(g, icon->getBounds().toFloat(), juce::RectanglePlacement(), 1.0);
+	icon->replaceColour(color, stoej::Colours::meta_unassigned);
 }
 
-void stoej::StoejButton::paintOneLabel(juce::Graphics& g, bool pressed)
-{
 
 
-	if (pressed) {
-		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
-		auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_inverted);
-		this->drawBackground(g, bg_c);
-		this->paintLabel(g, this->label_on_, txt_c);
-	}
-	else {
-		auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
-		auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
-		this->drawBackground(g, bg_c);
-		this->paintLabel(g, this->label_on_, txt_c);
-	}
-	
-	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
-	this->drawBorder(g, 1.f, border_c);
-}
-
-void stoej::StoejButton::paintTwoLabels(juce::Graphics& g, bool pressed)
-{
-	// TODO:
-	jassertfalse;
-}
-
-void stoej::StoejButton::paintLabel(juce::Graphics& g, juce::String label, juce::Colour c) {
+void stoej::StoejButton::paintLabel(juce::Graphics& g, juce::StringRef label, juce::Colour c) {
 	auto r = this->getLocalFloatBounds();
 	g.setColour(c);
 	g.setFont(stoej::get_font_archivo_narrow());
 	g.setFont(13.0f * dp_ * stoej::PT_2_PX);
 	g.drawText(label, r, juce::Justification::centred);
 }
-
-
-
-
-
-
-
-
-

@@ -14,7 +14,7 @@
 
 namespace stoej {
 
-    class ThemeManager : juce::Button::Listener {
+    class ThemeManager : public juce::Button::Listener {
     public:
         enum ThemeColorNames {
             text_primary,
@@ -58,42 +58,35 @@ namespace stoej {
         void setUseDarkMode(bool u) { this->use_dark_theme_.store(u); }
         bool getUseDarkMode() { return this->use_dark_theme_.load(); }
 
-        // return an atomic reference to the theme
-        std::atomic<ThemeColors>& getActiveTheme(bool use_dark_theme) {
+        // return a copy of the current active theme
+        ThemeColors getActiveTheme(bool use_dark_theme) {
+            std::scoped_lock l { this->mutex_dark_theme_, this->mutex_light_theme_ };
             if (use_dark_theme) return dark_theme_;
             else return light_theme_;
         }
 
         // return a copy of the current active theme
-        ThemeColors getRawActiveTheme(bool use_dark_theme) {
-            if (use_dark_theme) return dark_theme_.load();
-            else return light_theme_.load();
-        }
-
-        // return an atomic reference to the theme
-        std::atomic<ThemeColors>& getActiveTheme() {
+        ThemeColors getActiveTheme() {
+            std::scoped_lock l{ this->mutex_dark_theme_, this->mutex_light_theme_ };
             if (this->use_dark_theme_.load()) return dark_theme_;
             else return light_theme_;
         }
 
-        // return a copy of the current active theme
-        ThemeColors getRawActiveTheme() {
-            if (this->use_dark_theme_.load()) return dark_theme_.load();
-            else return light_theme_.load();
-        }
-
         // sets the current active theme
         void setActiveTheme(ThemeColors new_theme, bool use_dark_theme) {
-            if (use_dark_theme) dark_theme_.store(new_theme);
-            else light_theme_.store(new_theme);
+            std::scoped_lock l{ this->mutex_dark_theme_, this->mutex_light_theme_ };
+            if (use_dark_theme) dark_theme_ = new_theme;
+            else light_theme_ = new_theme;
         }
 
         juce::Colour getDarkThemeColor(ThemeColorNames name) {
-            return dark_theme_.load()[name];
+            std::scoped_lock l{ this->mutex_dark_theme_ };
+            return dark_theme_[name];
         }
 
         juce::Colour getLightThemeColor(ThemeColorNames name) {
-            return light_theme_.load()[name];
+            std::scoped_lock l{ this->mutex_light_theme_ };
+            return light_theme_[name];
         }
 
         juce::Colour getThemeColor(ThemeColorNames name, bool use_dark_theme) {
@@ -107,17 +100,13 @@ namespace stoej {
         }
 
         void setDarkThemeColor(ThemeColorNames name, juce::Colour color) {
-            // this is a bit inefficient, but the alternative is mutexes and those are hard to pass around
-            auto cur_theme = dark_theme_.load();
-            cur_theme[name] = color;
-            dark_theme_.store(cur_theme);
+            std::scoped_lock l{ this->mutex_dark_theme_ };
+            this->dark_theme_[name] = color;
         }
 
         void setLightThemeColor(ThemeColorNames name, juce::Colour color) {
-            // this is a bit inefficient, but the alternative is mutexes and those are hard to pass around
-            auto cur_theme = light_theme_.load();
-            cur_theme[name] = color;
-            light_theme_.store(cur_theme);
+            std::scoped_lock l{ this->mutex_light_theme_ };
+            this->light_theme_[name] = color;
         }
 
         void setThemeColor(ThemeColorNames name, bool use_dark_theme, juce::Colour color) {
@@ -130,16 +119,20 @@ namespace stoej {
             if (this->editor_) this->editor_->repaint();
         }
 
+        void setEditor(juce::AudioProcessorEditor* editor) {
+            this->editor_ = editor;
+        }
+
         ThemeManager() : dark_theme_(default_dark_theme), light_theme_(default_light_theme) {}
-        ThemeManager(juce::AudioProcessorEditor* editor) : dark_theme_(default_dark_theme), light_theme_(default_light_theme), editor_(editor) {}
         ThemeManager(ThemeColors dark_theme, ThemeColors light_theme) : dark_theme_(dark_theme), light_theme_(light_theme) {}
-        ThemeManager(juce::AudioProcessorEditor* editor, ThemeColors dark_theme, ThemeColors light_theme) : dark_theme_(dark_theme), light_theme_(light_theme), editor_(editor) {}
         ~ThemeManager() = default;
 
     protected:
         std::atomic_bool use_dark_theme_ = false;
-        std::atomic<ThemeColors> dark_theme_;
-        std::atomic<ThemeColors> light_theme_;
+        ThemeColors dark_theme_;
+        std::mutex mutex_dark_theme_;
+        ThemeColors light_theme_;
+        std::mutex mutex_light_theme_;
         juce::AudioProcessorEditor* editor_ = nullptr;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ThemeManager)

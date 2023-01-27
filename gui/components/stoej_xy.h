@@ -16,7 +16,7 @@
 namespace stoej {
     class XY : public stoej::FloatComponent<juce::Component>, public juce::Value::Listener {
     public:
-        XY(stoej::ThemedAPVTS& apvts);
+        XY(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager);
         void paint(juce::Graphics& g) override;
         void mouseDown(const juce::MouseEvent& e) override;
         void mouseDrag(const juce::MouseEvent& e) override;
