@@ -18,8 +18,8 @@ namespace stoej {
     };
 
     struct FloatParamInfo {
-        const char* id;
-        const char* name;
+        const juce::String id;
+        const juce::String name;
         const float init;
         const float range_0 = 0.0f;
         const float range_1 = 1.0f;

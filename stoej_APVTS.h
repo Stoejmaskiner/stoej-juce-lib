@@ -54,6 +54,10 @@ namespace stoej {
             else return float(info.init);
         }
 
+        void setPropertyFloat(stoej::PropertyInfo info, float val) {
+            this->state.setProperty(info.id, val, nullptr);
+        }
+
         bool getPropertyBool(stoej::PropertyInfo info) {
             auto maybe_val = this->state.getProperty(info.id);
             if (maybe_val) return bool(maybe_val);
@@ -66,6 +70,7 @@ namespace stoej {
     // you can safely downcast to this to access internals
     class APVTSInternalsAccessor : public APVTS {
     public:
+        using APVTS::getPropertyFloat;
         enum InternalParameterNames {};
         enum InternalPropertyNames {
             gui_scale,
@@ -73,12 +78,6 @@ namespace stoej {
         using InternalFloatParameters = std::map<InternalParameterNames, FloatParamInfo>;
         using InternalBoolParameters = std::map<InternalParameterNames, BoolParamInfo>;
         using InternalProperties = std::map<InternalPropertyNames, PropertyInfo>;
-
-        inline static const InternalFloatParameters internal_float_parameters = {};
-        inline static const InternalBoolParameters internal_bool_parameters = {};
-        inline static const InternalProperties internal_properties = {
-            {gui_scale, {"Y0mDh-wQe8r6rXT6bA_QD", 2.0f}}
-        };
 
         APVTSInternalsAccessor(
             juce::AudioProcessor& processorToConnectTo, 
@@ -98,7 +97,22 @@ namespace stoej {
             }
         }
 
+        float getPropertyFloat(InternalPropertyNames name) {
+            auto info = this->internal_properties.at(name);
+            return this->getPropertyFloat(info);
+        }
+
+        void setPropertyFloat(InternalPropertyNames name, float val) {
+            auto info = this->internal_properties.at(name);
+            this->state.setProperty(info.id, val, nullptr);
+        }
+
     private:
+        inline static const InternalFloatParameters internal_float_parameters = {};
+        inline static const InternalBoolParameters internal_bool_parameters = {};
+        inline static const InternalProperties internal_properties = {
+            {gui_scale, {"Y0mDh-wQe8r6rXT6bA_QD", 2.0f}}
+        };
         static ParameterLayout create_default_layout_helper(ParameterLayout layout) {
             //for (auto const& [_, val] : internal_bool_parameters) {
             //    layout.add(create_unique_param_bool(val));

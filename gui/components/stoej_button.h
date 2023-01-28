@@ -35,7 +35,7 @@ namespace stoej {
 
         // toggleable button with separate on and off labels
         StoejButton(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, juce::String name, ButtonSize size, const juce::String label_on, const juce::String label_off)
-            : StoejButton(apvts, theme_manager, size, label_on, label_off, nullptr, nullptr, true, true, false) {}
+            : StoejButton(apvts, theme_manager, name, size, label_on, label_off, nullptr, nullptr, true, true, false) {}
 
         // simple button with icon, optionally toggleable
         StoejButton(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, const juce::String name, ButtonSize size, std::unique_ptr<juce::Drawable> icon, bool toggleable = false)

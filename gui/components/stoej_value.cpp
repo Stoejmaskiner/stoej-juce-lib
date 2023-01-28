@@ -9,7 +9,7 @@
 */
 
 #include "stoej_value.h"
-stoej::Value::Value(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, juce::String& component_name, const char* label, ValueUnit unit)
+stoej::Value::Value(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit)
     : stoej::FloatComponent<juce::Slider>(apvts, theme_manager, component_name), label_(label), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
