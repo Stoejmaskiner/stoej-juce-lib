@@ -38,7 +38,7 @@ namespace stoej {
             {background_secondary,juce::Colour(0xff101010)},
             {fill_primary,juce::Colour(0xffff20a0)},
             {fill_secondary,juce::Colour(0xffffffff)},
-            {scope_background,juce::Colour(0xfff10101)},
+            {scope_background,juce::Colour(0xff101010)},
         };
         inline static const ThemeColors default_light_theme = {
             {text_primary,juce::Colour(0xff000000)},

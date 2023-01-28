@@ -16,7 +16,7 @@
 
 
 stoej::StoejButton::StoejButton(
-	stoej::APVTS& apvts,
+	stoej::APVTS* apvts,
 	stoej::ThemeManager& theme_manager,
 	const juce::String name,
 	ButtonSize size,
@@ -41,6 +41,9 @@ stoej::StoejButton::StoejButton(
 	this->setToggleable(toggleable);
 	//this->border_w_ = 1.0f;
 	//this->border_c_ = juce::Colours::black;
+	if (apvts)
+		this->attachment_.reset(
+			new juce::AudioProcessorValueTreeState::ButtonAttachment(*apvts, name, *this));
 }
 
 

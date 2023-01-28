@@ -9,7 +9,7 @@
 */
 
 #include "stoej_value.h"
-stoej::Value::Value(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit)
+stoej::Value::Value(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit)
     : stoej::FloatComponent<juce::Slider>(apvts, theme_manager, component_name), label_(label), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -21,6 +21,9 @@ stoej::Value::Value(stoej::APVTS& apvts, stoej::ThemeManager& theme_manager, con
     // TODO: screenreader support
     // TODO: editable value
     // TODO: custom mouse area to drawn slider only
+    if (apvts)
+        this->attachment_.reset(
+            new juce::AudioProcessorValueTreeState::SliderAttachment(*apvts, component_name, *this));
 }
 
 
