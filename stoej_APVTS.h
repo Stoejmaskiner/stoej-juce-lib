@@ -78,6 +78,11 @@ namespace stoej {
         using InternalFloatParameters = std::map<InternalParameterNames, FloatParamInfo>;
         using InternalBoolParameters = std::map<InternalParameterNames, BoolParamInfo>;
         using InternalProperties = std::map<InternalPropertyNames, PropertyInfo>;
+        inline static const InternalFloatParameters internal_float_parameters = {};
+        inline static const InternalBoolParameters internal_bool_parameters = {};
+        inline static const InternalProperties internal_properties = {
+            {gui_scale, {"Y0mDh-wQe8r6rXT6bA_QD", 2.0f}}
+        };
 
         APVTSInternalsAccessor(
             juce::AudioProcessor& processorToConnectTo, 
@@ -108,11 +113,7 @@ namespace stoej {
         }
 
     private:
-        inline static const InternalFloatParameters internal_float_parameters = {};
-        inline static const InternalBoolParameters internal_bool_parameters = {};
-        inline static const InternalProperties internal_properties = {
-            {gui_scale, {"Y0mDh-wQe8r6rXT6bA_QD", 2.0f}}
-        };
+        
         static ParameterLayout create_default_layout_helper(ParameterLayout layout) {
             //for (auto const& [_, val] : internal_bool_parameters) {
             //    layout.add(create_unique_param_bool(val));
