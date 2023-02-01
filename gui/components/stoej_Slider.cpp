@@ -10,8 +10,8 @@
 
 #include "stoej_Slider.h"
 
-stoej::StoejSlider::StoejSlider(stoej::ThemedAPVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
-    stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), is_inverted_(is_inverted), unit_(unit)
+stoej::StoejSlider::StoejSlider(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted) :
+    stoej::FloatComponent<juce::Slider>(apvts, theme_manager, component_name), label_(label), is_inverted_(is_inverted), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     this->setBorderWidth(1.0f);
@@ -22,17 +22,10 @@ stoej::StoejSlider::StoejSlider(stoej::ThemedAPVTS& apvts, const juce::String& c
     // TODO: screenreader support
     // TODO: editable value
     // TODO: custom mouse area to drawn slider only
+    if (apvts)
+        this->attachment_.reset(
+            new juce::AudioProcessorValueTreeState::SliderAttachment(*apvts, component_name, *this));
 }
-
-/*
-void stoej::StoejSlider::resized()
-{
-    auto r = this->getLocalBounds();
-    this->label_box_.setBounds(r.removeFromTop(18.f * dp_));
-    this->value_box_.setBounds(r.removeFromTop(18.f * dp_));
-}
-*/
-
 
 
 void stoej::StoejSlider::paint(juce::Graphics& g)
@@ -46,8 +39,8 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     //this->drawBackground(g);
     //this->drawBorder(g);
     
-    // TODO: macro this, it's reused a lot. Call it something like "STOEJ_GET_THEME_COLOR_WITH_MODE_APPLIED"
-    auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
+
+    auto bg_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::background_primary);
     this->drawBackground(g, bg_c);
     //g.setColour(bg);
     //g.fillRect(r);
@@ -56,14 +49,14 @@ void stoej::StoejSlider::paint(juce::Graphics& g)
     auto p = this->valueToProportionOfLength(v);
     if(this->is_inverted_) r3.removeFromBottom(r3.getHeight() * p);
     else r3.removeFromTop(r3.getHeight() * (1. - p));
-    auto fill_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::fill_secondary);
+    auto fill_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::fill_secondary);
     g.setColour(fill_c);
     g.fillRect(r3);
-    auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+    auto border_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::foreground_primary);
     g.setColour(border_c);
     if(this->is_inverted_) g.drawLine(juce::Line(r3.getBottomLeft(), r3.getBottomRight()), 1.0f * dp_);
     else g.drawLine(juce::Line(r3.getTopLeft(), r3.getTopRight()), 1.0f * dp_);
-    auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
+    auto txt_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::text_primary);
     g.setColour(txt_c);
     stoej::draw_rect_f(g, r, 1.0f * dp_);
     g.setFont(get_font_archivo_narrow());

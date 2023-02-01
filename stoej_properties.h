@@ -10,6 +10,25 @@
 
 #pragma once
 
+// adds a property to the APVTS with the same id as the passed identifier
+#define STOEJ_VT_SET_AUTONAMED_PROPERTY(vt,val) {\
+vt.setProperty(JUCE_STRINGIFY(val),val,nullptr);\
+}
+
+// assert that an autonamed property has the same value as the original symbol
+#define STOEJ_VT_ASSERT_AUTONAMED_PROPERTY(vt,val) {\
+jassert(vt.getProperty(JUCE_STRINGIFY(val))) == val);\
+}
+
+// get a previously autonamed property. If the identifier is undefined, this will fail
+#define STOEJ_VT_GET_AUTONAMED_PROPERTY_CHECKED(vt,val) (\
+val == val,\
+vt.getProperty(JUCE_STRINGIFY(val)))
+
+// compare a previously autonamed property with the original value
+#define STOEJ_VT_COMPARE_AUTONAMED_PROPERTY(vt,val) (\
+val == vt.getProperty(JUCE_STRINGIFY(val)))
+
 namespace stoej {
     struct PropertyInfo {
         const juce::Identifier id;

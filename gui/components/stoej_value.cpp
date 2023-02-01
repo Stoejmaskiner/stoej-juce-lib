@@ -9,8 +9,8 @@
 */
 
 #include "stoej_value.h"
-stoej::Value::Value(stoej::ThemedAPVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit) :
-    stoej::FloatComponent<juce::Slider>(apvts, component_name), label_(label), unit_(unit)
+stoej::Value::Value(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit)
+    : stoej::FloatComponent<juce::Slider>(apvts, theme_manager, component_name), label_(label), unit_(unit)
 {
     this->setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     this->setBorderWidth(1.0f);
@@ -21,6 +21,9 @@ stoej::Value::Value(stoej::ThemedAPVTS& apvts, const juce::String& component_nam
     // TODO: screenreader support
     // TODO: editable value
     // TODO: custom mouse area to drawn slider only
+    if (apvts)
+        this->attachment_.reset(
+            new juce::AudioProcessorValueTreeState::SliderAttachment(*apvts, component_name, *this));
 }
 
 
@@ -37,7 +40,7 @@ void stoej::Value::paint(juce::Graphics& g)
     //this->drawBorder(g);
     //this->dbgDrawFloatBounds(g);
     //this->dbgDrawIntBounds(g);
-    auto bg_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::background_primary);
+    auto bg_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::background_primary);
     this->drawBackground(g, bg_c);
     auto r1 = r.removeFromTop(18.f * dp_);
     auto r2 = r.removeFromTop(18.f * dp_);
@@ -49,17 +52,17 @@ void stoej::Value::paint(juce::Graphics& g)
     auto p = this->valueToProportionOfLength(v);
     r3.removeFromRight(r3.getWidth() * (1. - p));
 
-    auto fill_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::fill_secondary);
+    auto fill_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::fill_secondary);
     g.setColour(fill_c);
     g.fillRect(r3);
 
-    auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
+    auto border_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::foreground_primary);
     g.setColour(border_c);
     g.drawLine(juce::Line(r3.getTopRight(), r3.getBottomRight()), 1.0f * dp_);
     //g.setColour(this->border_c_);
     stoej::draw_rect_f(g, r, 1.0f * dp_);
     
-    auto txt_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::text_primary);
+    auto txt_c = this->theme_manager_.getThemeColor(stoej::ThemeManager::text_primary);
     g.setColour(txt_c);
     g.setFont(get_font_archivo_narrow());
     g.setFont(12.f * dp_ * stoej::PT_2_PX);

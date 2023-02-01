@@ -23,7 +23,7 @@ namespace stoej {
         // enum SliderSize {};
         //enum SliderDirection { vertical, horizontal };
 
-        Value(stoej::ThemedAPVTS&, const juce::String& component_name, const char* label, ValueUnit unit);
+        Value(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit);
         std::variant<float, DynamicSize2> getPreferredHeight() override { return { 48.0f }; }
         std::variant<float, DynamicSize2> getPreferredWidth() override { return { 48.0f }; }
         void resized() override;
@@ -36,5 +36,6 @@ namespace stoej {
         //Box bounding_box_;
         //juce::Label label_box_;
         //juce::Label value_box_;
+        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment_;
     };
 }

@@ -10,8 +10,8 @@
 
 #include "stoej_xy.h"
 
-stoej::XY::XY(stoej::ThemedAPVTS& apvts)
-    : stoej::FloatComponent<juce::Component>(apvts)
+stoej::XY::XY(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager)
+    : stoej::FloatComponent<juce::Component>(apvts, theme_manager)
 {
     this->x_.addListener(this);
     this->y_.addListener(this);

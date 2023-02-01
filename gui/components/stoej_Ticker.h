@@ -23,7 +23,7 @@ namespace stoej {
         // enum SliderSize {};
         //enum SliderDirection { vertical, horizontal };
 
-        Ticker(stoej::ThemedAPVTS& apvts, const juce::String& component_name);
+        Ticker(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name);
         std::variant<float, DynamicSize2> getPreferredHeight() override { return { 24.0f }; }
         std::variant<float, DynamicSize2> getPreferredWidth() override { return { fill_parent }; }
         void mouseEnter(const juce::MouseEvent& event) override;

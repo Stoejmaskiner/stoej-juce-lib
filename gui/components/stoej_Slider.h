@@ -15,6 +15,7 @@
 #include "utils/stoej_math.h"
 #include "binary_data/stoej_Fonts.h"
 #include "utils/stoej_graphics_utils.h"
+#include "stoej_APVTS.h"
 
 namespace stoej {
     class StoejSlider : public stoej::FloatComponent<juce::Slider> {
@@ -23,7 +24,7 @@ namespace stoej {
         // enum SliderSize {};
         //enum SliderDirection { vertical, horizontal };
         
-        StoejSlider(stoej::ThemedAPVTS& apvts, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted);
+        StoejSlider(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, const juce::String& component_name, const char* label, ValueUnit unit, bool is_inverted);
         std::variant<float, DynamicSize2> getPreferredHeight() override { return { 144.0f }; }
         std::variant<float, DynamicSize2> getPreferredWidth() override { return { 48.0f }; }
         //void resized() override;
@@ -33,7 +34,8 @@ namespace stoej {
     private:
         const char* label_;
         ValueUnit unit_;
-        bool is_inverted_;
+        bool is_inverted_; 
+        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment_;
         //Box bounding_box_;
         //juce::Label label_box_;
         //juce::Label value_box_;
