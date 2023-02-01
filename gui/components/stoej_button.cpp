@@ -118,6 +118,9 @@ void stoej::StoejButton::paintOneIcon(juce::Graphics& g, bool pressed)
 
 	auto border_c = this->apvts_.getGenericThemeColorWithModeApplied(strings::generic_theme::foreground_primary);
 	this->drawBorder(g, 1.f, border_c);
+
+	this->dbgDrawIntBounds(g);
+	this->dbgDrawFloatBounds(g);
 }
 
 void stoej::StoejButton::paintTwoIcons(juce::Graphics& g, bool pressed)
