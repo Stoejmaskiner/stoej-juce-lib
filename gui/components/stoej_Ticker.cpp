@@ -16,7 +16,7 @@ stoej::Ticker::Ticker(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, c
     stoej::FloatComponent<juce::Label>(apvts, theme_manager, component_name) 
 {
     //this->setBorderWidth(1.0);
-    this->setTooltip("hover over components to get a brief description");
+    this->setTooltip("hover over controls to get a brief description");
     this->addMouseListener(this, false);
 }
 

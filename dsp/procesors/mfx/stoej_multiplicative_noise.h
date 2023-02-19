@@ -99,7 +99,8 @@ namespace stoej {
 				auto* dry = inBlock.getChannelPointer(c);
 				auto* dst = outBlock.getChannelPointer(c);
 				for (size_t i = 0; i < len; i++) {
-					auto coeffs = stoej::xfade_6db_coeffs<ST>(this->noise_mix_.getNextValue());
+					auto t = this->noise_mix_.getNextValue();
+					auto coeffs = stoej::xfade_3db_coeffs<ST>(t);
 					dst[i] = stoej::xfade(dry[i], wet[i], coeffs);
 				}
 			}

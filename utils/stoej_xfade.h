@@ -25,7 +25,7 @@ namespace stoej {
 
     STOEJ_FT_
     Coeffs<FT_> xfade_linear_coeffs(FT_ t) {
-        return Coeffs<FT_>{ .a = t, .b = FT_(1.0)};
+        return Coeffs<FT_>{ .a = FT_(1.0) - t, .b = t };
     }
 
     STOEJ_FT_ const auto xfade_6db_coeffs = xfade_linear_coeffs<FT_>;
