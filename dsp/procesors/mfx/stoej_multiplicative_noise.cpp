@@ -8,6 +8,9 @@
   ==============================================================================
 */
 
+// TODO: this is dumb. Why is this a library module? It's literally the entirety of
+// FP000's implementation. This could not be less reusable.
+
 #include "stoej_multiplicative_noise.h"
 
 
@@ -17,7 +20,7 @@ stoej::MultiplicativeNoise<ST>::MultiplicativeNoise() {
     this->filter_lp_.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
     this->filter_hp_.setType(juce::dsp::StateVariableTPTFilterType::highpass);
     this->noise_generator_.setEnableHQWidth(true);
-    this->noise_buffer_ = juce::AudioBuffer<ST>(16,0);
+    this->work_buffer_ = juce::AudioBuffer<ST>(16,0);
 
 }
 
@@ -25,7 +28,7 @@ template <typename ST>
 void stoej::MultiplicativeNoise<ST>::prepare(juce::dsp::ProcessSpec& spec) {
 
     sample_rate_ = spec.sampleRate;
-    this->noise_buffer_.setSize(spec.numChannels, spec.maximumBlockSize);
+    this->work_buffer_.setSize(spec.numChannels, spec.maximumBlockSize);
     this->noise_generator_.prepare(spec);
     this->filter_lp_.prepare(spec);
     this->filter_hp_.prepare(spec);
@@ -44,6 +47,8 @@ void stoej::MultiplicativeNoise<ST>::reset() {
     this->filter_hp_.reset();
     this->filter_lp_cutoff_.reset(sample_rate_, 0.02);
     this->filter_hp_cutoff_.reset(sample_rate_, 0.02);
+    this->noise_mix_.reset(sample_rate_, 0.02);
+    this->out_level_.reset(sample_rate_, 0.02);
 }
 
 

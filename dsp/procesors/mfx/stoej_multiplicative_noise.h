@@ -47,7 +47,8 @@ namespace stoej {
 	        }
 
 			// compute wet buffer
-			auto noise_block = juce::dsp::AudioBlock<ST>(this->noise_buffer_);
+			// TODO: there's no way this terrible boilerplate can't be reduced
+			auto noise_block = juce::dsp::AudioBlock<ST>(this->work_buffer_);
 			auto noise_context = juce::dsp::ProcessContextReplacing<ST>(noise_block);
 			this->noise_generator_.process(noise_context);
 	        for (size_t c = 0; c < numChans; c++) {
@@ -90,51 +91,31 @@ namespace stoej {
 			}
 
 			// crossfade
-			auto coeffs = stoej::xfade_fast_transition(this->noise_mix_);
+
 			// need to do 1 - mix because the xfade function has the destination as the first
 			// crossfade argument and we can't write to the input buffer (dry)
 			for (size_t c = 0; c < numChans; c++) {
 				auto* wet = noise_block.getChannelPointer(c);
 				auto* dry = inBlock.getChannelPointer(c);
 				auto* dst = outBlock.getChannelPointer(c);
-				stoej::xfade<ST>(dst, dry, wet, coeffs, len);
+				for (size_t i = 0; i < len; i++) {
+					auto coeffs = stoej::xfade_6db_coeffs<ST>(this->noise_mix_.getNextValue());
+					dst[i] = stoej::xfade(dry[i], wet[i], coeffs);
+				}
 			}
 
-			for (size_t c = 0; c < numChans; c++) {
-				auto* buff = outBlock.getChannelPointer(c);
-				juce::FloatVectorOperationsBase<ST,int>::multiply(buff, this->getOutLevel(), len);
+			{
+				auto* gain_buff = this->work_buffer_.getWritePointer(0);
+				for (size_t i = 0; i < len; i++) {
+					gain_buff[i] = this->out_level_.getNextValue();
+				}
 			}
 			
-		
-
-
-	        // example code 2: gain with explicit vectorization
-	        /*
-	        auto* gains = static_cast<ST*>( alloca( sizeof(ST) * len ) );
-
-	        for (size_t i = 0; i < len; i++) {
-	            gains[i] = gain.getNextValue();
-	        }
-
-	        for (size_t c = 0; c < numChans; c++) {
-	            auto* src = inBlock.getChannelPointer (c);
-	            auto* dst = outBlock.getChannelPointer (c);
-	            juce::FloatVectorOperations::multiply(dst, src, gains, static_cast<int>(len));
-	        }
-	        */
-
-	        // example code 3: defer to processSample (no opt)
-	        /*
-
-	        for (size_t c = 0; c < numChans; c++) {
-	            auto* src = inBlock.getChannelPointer (c);
-	            auto* dst = outBlock.getChannelPointer (c);
-	            for (size_t i = 0; i < len; i++) {
-	                dst[i] = this->processSample(c, src[i]);
-	            }
-	        }
-	        */
-
+			auto* gain_buff = this->work_buffer_.getReadPointer(0);
+			for (size_t c = 0; c < numChans; c++) {
+				auto* buff = outBlock.getChannelPointer(c);
+				juce::FloatVectorOperationsBase<ST,int>::multiply(buff, gain_buff, len);
+			}
 	    }
 
 	    // ========================================================================
@@ -142,18 +123,19 @@ namespace stoej {
 	    ST getNoiseWidth()              { return this->noise_generator_.getNoiseWidth(); }
 		void setNoiseDensity(ST val)    {        this->noise_density_ = val; }
 		ST getNoiseDensity()            { return this->noise_density_; }
-		void setNoiseMix(ST val)        {        this->noise_mix_ = val; }
-		ST getNoiseMix()                { return this->noise_mix_; }
+		void setNoiseMix(ST val) { this->noise_mix_.setTargetValue(val); }
+		ST getNoiseMix() { return this->noise_mix_.getTargetValue(); }
 		void setFilterLPCutoff(ST val)  {        this->filter_lp_cutoff_.setTargetValue(val); }
 		ST getFilterLPCutoff()          { return this->filter_lp_cutoff_.getTargetValue(); }
 		void setFilterHPCutoff(ST val)  {	 	 this->filter_hp_cutoff_.setTargetValue(val); }
 		ST getFilterHPCutoff()		    { return this->filter_hp_cutoff_.getTargetValue(); }
 		void setGritEnable(bool enable) {		 this->grit_enable_ = enable; }
 		bool getGritEnable()		    { return this->grit_enable_; }
-		void setOutLevel(ST val)		{		 this->out_level_ = val; }
-		ST getOutLevel()				{ return this->out_level_; }
+		void setOutLevel(ST val) { this->out_level_.setTargetValue(val); }
+		ST getOutLevel()				{ return this->out_level_.getTargetValue(); }
 
 	private:
+
 		// ===============================================================
 		// adjust these to calibrate
 		static constexpr ST DENSITY_GAIN_COMP_ = ST(3.0);	// gain compensation for low density noise
@@ -163,11 +145,13 @@ namespace stoej {
 		juce::SmoothedValue<ST> filter_hp_cutoff_;
 		bool grit_enable_ = true;
 		ST noise_density_ = ST(1.0);
-		ST noise_mix_ = ST(0.5);
-		ST out_level_ = ST(1.0);
+		//ST noise_mix_ = ST(0.5);
+		//ST out_level_ = ST(1.0);
+		juce::SmoothedValue<ST> noise_mix_;
+		juce::SmoothedValue<ST> out_level_;
 
 		
-		juce::AudioBuffer<ST> noise_buffer_;
+		juce::AudioBuffer<ST> work_buffer_;
 		juce::dsp::StateVariableTPTFilter<ST> filter_lp_;
 		juce::dsp::StateVariableTPTFilter<ST> filter_hp_;
 
