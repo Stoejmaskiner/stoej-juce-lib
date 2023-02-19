@@ -16,6 +16,8 @@ stoej::Ticker::Ticker(stoej::APVTS* apvts, stoej::ThemeManager& theme_manager, c
     stoej::FloatComponent<juce::Label>(apvts, theme_manager, component_name) 
 {
     //this->setBorderWidth(1.0);
+    this->setTooltip("hover over components to get a brief description");
+    this->addMouseListener(this, false);
 }
 
 void stoej::Ticker::mouseEnter(const juce::MouseEvent& event)
@@ -29,6 +31,8 @@ void stoej::Ticker::mouseEnter(const juce::MouseEvent& event)
 
 void stoej::Ticker::mouseExit(const juce::MouseEvent& event)
 {
+    this->active_tooltip_ = "";
+    this->repaint();
 }
 
 void stoej::Ticker::paint(juce::Graphics& g)
