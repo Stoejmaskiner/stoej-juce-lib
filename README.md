@@ -2,6 +2,33 @@
 
 [TOC]
 
+```
+stoej-juce-lib/
+  include/
+    StoejHeader.h
+  src/
+    dsp/
+      generators/
+        ...
+      processors/
+        ...
+      stoej_Generator.h
+      stoej_Processor.h
+    gui/
+      components/
+        ...
+      stoej_Component.h
+    stoej_core.h
+    stoej_APVTS.h
+    stoej_parameters.h
+```
+
+
+
+
+
+
+
 This is code used in all Støjmaskiner plugins, free or not, open source or not. This code remains free and open source and is a peer into how some of our plugins work.
 Please note that this code is intended for use inside of a JUCE project and depends on the JUCE headers being defined. No makefiles or other configuration files are provided
 as you are expected to add this library to an existing project as a simple static dependency.
